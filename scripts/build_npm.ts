@@ -8,6 +8,7 @@ await build({
   shims: {
     deno: true,
   },
+  test: false,
   package: {
     name: "discogs-ts-edge-client",
     version: Deno.args[0],
