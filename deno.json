@@ -17,7 +17,7 @@
     "test:integration": "deno test tests/integration/ --allow-net --allow-env --allow-read",
     "lint": "deno lint",
     "fmt": "deno fmt",
-    "check": "deno check src/index.ts"
+    "check": "deno check src/mod.ts"
   },
   "exclude": ["node_modules", "dist", "coverage"]
 }

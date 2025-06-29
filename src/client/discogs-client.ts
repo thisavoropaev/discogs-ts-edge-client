@@ -5,7 +5,7 @@ import type {
   DiscogsApiError,
   EndpointResponseMap,
   RequestRawParams,
-} from "@/types/index.ts";
+} from "@/types/mod.ts";
 import type {
   DiscogsClient,
   DiscogsClientConfig,
