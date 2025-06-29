@@ -1,103 +1,244 @@
-# discogs-ts-edge-client
+# Discogs TypeScript Client for Edge Runtime
 
-A universal, lightweight TypeScript client for Discogs API v2, designed for
-edge/serverless environments (Vercel Edge Functions, Cloudflare Workers, Deno,
-etc.). Supports all endpoints, strong typing (coverage expanding), and
-functional error handling via
-[`neverthrow`](https://github.com/supermacro/neverthrow).
+A modern TypeScript client for the Discogs API, optimized for edge runtime
+environments like Vercel Edge Functions and Cloudflare Workers.
 
-## Key Features
+## Features
 
-- **Edge/server-first:** Secure secret storage, no internal retries
-- **OAuth 1.0a:** Only request signing with pre-obtained tokens (token
-  acquisition is external)
-- **Strict typing:** Expanding TypeScript types for all entities and API
-  responses
-- **Functional error handling:** All methods return `Result<T, DiscogsApiError>`
-- **Security:** Never use in the browser—server/edge only
+- 🚀 **Edge Runtime Optimized**: Built specifically for serverless edge
+  environments
+- 🦕 **Deno Native**: Developed and built with Deno for maximum compatibility
+- 📦 **Zero Dependencies**: Lightweight bundle with no external runtime
+  dependencies
+- 🔒 **Type Safe**: Full TypeScript support with generated declarations
+- 🌐 **Web Standards**: Uses modern Web APIs (fetch, URL, etc.)
+- ⚡ **Fast**: Optimized bundle size for quick cold starts
 
-## Important
+## Supported Platforms
 
-- **Do not use in the browser:** OAuth secrets must not be exposed on the
-  client.
-- **Types and models** can be safely used in the frontend for strict typing.
+- ✅ Vercel Edge Functions
+- ✅ Cloudflare Workers
+- ✅ Deno Deploy
+- ✅ Deno Runtime
+- ✅ Modern browsers
+- ✅ Node.js 18+ (ESM only)
 
-## Error Handling
+## Installation
 
-All API methods return a result via
-[`neverthrow`](https://github.com/supermacro/neverthrow):
+### For Deno
 
 ```typescript
-type DiscogsApiError = {
-  type:
-    | "AUTH_ERROR"
-    | "NETWORK_ERROR"
-    | "API_ERROR"
-    | "RATE_LIMIT_ERROR"
-    | "VALIDATION_ERROR";
-  message: string;
-  statusCode?: number;
-  details?: unknown;
-};
+import { DiscogsClient } from "https://deno.land/x/discogs_client/mod.ts";
 ```
 
-## Usage Example
+### For npm/Node.js (after publishing)
+
+```bash
+npm install discogs-ts-client
+```
 
 ```typescript
-import { createDiscogsClient } from "discogs-ts-client";
-import type { OAuthCredentials } from "discogs-ts-client";
+import { DiscogsClient } from "discogs-ts-client";
+```
 
-const credentials: OAuthCredentials = {
+## Quick Start
+
+```typescript
+import { DiscogsClient } from "./src/index.ts";
+
+// Initialize client
+const client = new DiscogsClient({
+  userAgent: "MyApp/1.0",
+  // Optional: for authenticated requests
   consumerKey: "your-consumer-key",
   consumerSecret: "your-consumer-secret",
-  token: "user-access-token",
-  tokenSecret: "user-token-secret",
+});
+
+// Search for releases
+const searchResults = await client.search("Nirvana Nevermind");
+console.log(searchResults.data);
+
+// Get release details
+const release = await client.getRelease(249504);
+console.log(release.data);
+```
+
+## Edge Function Examples
+
+### Vercel Edge Function
+
+```typescript
+// api/discogs.ts
+import { DiscogsClient } from "discogs-ts-client";
+import { NextRequest } from "next/server";
+
+export const config = {
+  runtime: "edge",
 };
 
-const client = createDiscogsClient({
-  credentials,
-  userAgent: "DiscogsClient/1.0 +https://github.com/your/repo",
-});
+export default async function handler(req: NextRequest) {
+  const client = new DiscogsClient({
+    userAgent: "MyApp/1.0",
+    consumerKey: process.env.DISCOGS_CONSUMER_KEY,
+    consumerSecret: process.env.DISCOGS_CONSUMER_SECRET,
+  });
 
-// Example: Get release details with path and query parameters
-const result = await client.request({
-  method: "GET",
-  endpoint: "/releases/:release_id",
-  pathParams: { release_id: "249504" },
-  queryParams: { curr_abbr: "USD" },
-  headers: {
-    "Accept-Language": "en-US",
-  },
-});
+  const { searchParams } = new URL(req.url);
+  const query = searchParams.get("q");
 
-if (result.isOk()) {
-  const release = result.value;
-  console.log(release.title, release.id);
-} else {
-  console.error("DiscogsApiError:", result.error);
+  if (!query) {
+    return new Response("Missing query parameter", { status: 400 });
+  }
+
+  try {
+    const results = await client.search(query);
+    return Response.json(results.data);
+  } catch (error) {
+    return new Response("Search failed", { status: 500 });
+  }
 }
 ```
 
-## Target Audience
+### Cloudflare Worker
 
-- Backend developers and microservice authors working with the Discogs API
-- Frontend developers who need strict TypeScript types for API data
-- Engineers needing a universal, edge-first client with explicit error handling
+```typescript
+import { DiscogsClient } from "discogs-ts-client";
 
-## Capabilities
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const client = new DiscogsClient({
+      userAgent: "MyApp/1.0",
+      consumerKey: env.DISCOGS_CONSUMER_KEY,
+      consumerSecret: env.DISCOGS_CONSUMER_SECRET,
+    });
 
-- **All Discogs API v2 endpoints** (type coverage expanding)
-- **Functional error handling** via `neverthrow`
-- **Unit and integration tests** using `deno test` and real tokens via
-  environment variables
-- **Build process** generates type declarations for frontend import
+    const url = new URL(request.url);
+    const query = url.searchParams.get("q");
 
-## Architecture and Structure
+    if (!query) {
+      return new Response("Missing query parameter", { status: 400 });
+    }
 
-- **OAuth signature module**, implementing asynchronous signing with Web Crypto
-  API (compatible with Node.js, Deno, Cloudflare Workers, Edge Functions)
-- **Main client** with API methods returning `neverthrow.Result`
-- **TypeScript types** for all entities and API responses
-- **Tests** (unit and integration) using `deno test` and real tokens via
-  environment variables
-- **Build process** generates type declarations for easy frontend import
+    try {
+      const results = await client.search(query);
+      return Response.json(results.data);
+    } catch (error) {
+      return new Response("Search failed", { status: 500 });
+    }
+  },
+};
+```
+
+## Development
+
+### Prerequisites
+
+- [Deno](https://deno.land/) 1.40+
+
+### Setup
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd discogs-ts-client
+
+# Run tests
+deno task test
+
+# Check types
+deno task check
+
+# Format code
+deno task fmt
+
+# Lint code
+deno task lint
+```
+
+### Building
+
+```bash
+# Build ESM bundle
+deno task build:esm
+
+# Simple bundle (for testing)
+deno task build
+```
+
+### Testing
+
+```bash
+# Run all tests
+deno task test
+
+# Run unit tests only
+deno task test:unit
+
+# Run integration tests only
+deno task test:integration
+```
+
+## API Reference
+
+### DiscogsClient
+
+#### Constructor
+
+```typescript
+new DiscogsClient(config: DiscogsClientConfig)
+```
+
+#### Configuration
+
+```typescript
+type DiscogsClientConfig = {
+  userAgent: string; // Required: Your app identifier
+  consumerKey?: string; // OAuth consumer key
+  consumerSecret?: string; // OAuth consumer secret
+  token?: string; // OAuth access token
+  tokenSecret?: string; // OAuth access token secret
+};
+```
+
+#### Methods
+
+- `search(query: string, options?: SearchOptions)` - Search the Discogs database
+- `getRelease(id: number)` - Get release details
+- `getMaster(id: number)` - Get master release details
+- `getArtist(id: number)` - Get artist details
+- `getLabel(id: number)` - Get label details
+- `getIdentity()` - Get authenticated user identity
+- `getProfile(username: string)` - Get user profile
+
+## Environment Variables
+
+For authenticated requests, set these environment variables:
+
+```bash
+DISCOGS_CONSUMER_KEY=your-consumer-key
+DISCOGS_CONSUMER_SECRET=your-consumer-secret
+DISCOGS_TOKEN=your-access-token
+DISCOGS_TOKEN_SECRET=your-access-token-secret
+```
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Run `deno task test` and `deno task check`
+6. Submit a pull request
+
+## Changelog
+
+### v1.0.0
+
+- Initial release
+- Edge runtime optimization
+- Full TypeScript support
+- Deno native development

@@ -51,6 +51,9 @@ jobs:
         id: get_version
         run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      - name: Build ESM bundle for GitHub import
+        run: deno task build
+
       - name: Build npm package
         run: deno run -A scripts/build_npm.ts ${{ steps.get_version.outputs.version }}
 
@@ -58,4 +61,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
-          files: "npm/**"
+          files: |
+            dist/index.js
+            dist/index.d.ts
+            npm/**
