@@ -27,7 +27,10 @@ jobs:
       - name: Set up Deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.44.4
+          deno-version: v2.x
+
+      - name: Check Deno version
+        run: deno --version
 
       - name: Verify formatting
         run: deno fmt --check
@@ -40,10 +43,10 @@ jobs:
 
       - name: Get version from tag
         id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Build npm package
-        run: deno run -A scripts/build_npm.ts ${{ env.VERSION }}
+        run: deno run -A scripts/build_npm.ts ${{ steps.get_version.outputs.version }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
