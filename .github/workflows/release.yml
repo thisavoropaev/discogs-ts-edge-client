@@ -8,6 +8,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    environment: development
     permissions:
       contents: write
 
@@ -40,6 +41,11 @@ jobs:
 
       - name: Run tests
         run: deno task test
+        env:
+          DISCOGS_CONSUMER_KEY: ${{ secrets.DISCOGS_CONSUMER_KEY }}
+          DISCOGS_CONSUMER_SECRET: ${{ secrets.DISCOGS_CONSUMER_SECRET }}
+          DISCOGS_ACCESS_TOKEN: ${{ secrets.DISCOGS_ACCESS_TOKEN }}
+          DISCOGS_ACCESS_TOKEN_SECRET: ${{ secrets.DISCOGS_ACCESS_TOKEN_SECRET }}
 
       - name: Get version from tag
         id: get_version
