@@ -9,16 +9,16 @@ await build({
     deno: true,
   },
   package: {
-    name: "discogs-ts-client",
+    name: "discogs-ts-edge-client",
     version: Deno.args[0],
     description: "A TypeScript client for the Discogs API for server and edge environments.",
     license: "MIT",
     repository: {
       type: "git",
-      url: "git+https://github.com/thisavoropaev/discogs-ts-client.git",
+      url: "git+https://github.com/thisavoropaev/discogs-ts-edge-client.git",
     },
     bugs: {
-      url: "https://github.com/thisavoropaev/discogs-ts-client/issues",
+      url: "https://github.com/thisavoropaev/discogs-ts-edge-client/issues",
     },
   },
   postBuild() {
