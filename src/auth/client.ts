@@ -21,12 +21,12 @@ export type OAuthClient = {
     method: HttpMethod,
     url: string,
     parameters?: Record<string, string>,
-  ) => Result<string, OAuthError>;
+  ) => Promise<Result<string, OAuthError>>;
   createAuthHeader: (
     method: HttpMethod,
     url: string,
     parameters?: Record<string, string>,
-  ) => Result<string, OAuthError>;
+  ) => Promise<Result<string, OAuthError>>;
   request: (
     method: HttpMethod,
     endpoint: string,
@@ -46,12 +46,12 @@ export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
       : endpoint;
   };
 
-  const sign = (
+  const sign = async (
     method: HttpMethod,
     url: string,
     parameters?: Record<string, string>,
-  ): Result<string, OAuthError> => {
-    return generateOAuthSignature({
+  ): Promise<Result<string, OAuthError>> => {
+    return await generateOAuthSignature({
       credentials,
       method,
       url,
@@ -59,12 +59,12 @@ export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
     });
   };
 
-  const createAuthHeader = (
+  const createAuthHeader = async (
     method: HttpMethod,
     url: string,
     parameters?: Record<string, string>,
-  ): Result<string, OAuthError> => {
-    return createAuthorizationHeader({
+  ): Promise<Result<string, OAuthError>> => {
+    return await createAuthorizationHeader({
       credentials,
       method,
       url,
@@ -80,7 +80,7 @@ export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
     const fullUrl = buildFullUrl(endpoint);
     const { headers = {}, body, parameters } = options;
 
-    const authHeaderResult = createAuthHeader(
+    const authHeaderResult = await createAuthHeader(
       method,
       fullUrl,
       parameters,

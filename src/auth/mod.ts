@@ -4,9 +4,9 @@ import type { OAuthError, OAuthSignatureParams } from "@/types/auth.ts";
 
 export { createOAuthClient } from "@/auth/client.ts";
 
-export const generateOAuthSignature = (
+export const generateOAuthSignature = async (
   params: OAuthSignatureParams,
-): Result<string, OAuthError> => {
+): Promise<Result<string, OAuthError>> => {
   const { consumerKey, consumerSecret } = params.credentials;
   if (!consumerKey || !consumerSecret) {
     return err({
@@ -32,7 +32,7 @@ export const generateOAuthSignature = (
       }
       : undefined;
 
-    const signResult = client.sign(params.method, params.url, {
+    const signResult = await client.sign(params.method, params.url, {
       token,
       body: params.parameters
         ? new URLSearchParams(params.parameters)
@@ -49,9 +49,9 @@ export const generateOAuthSignature = (
   }
 };
 
-export const createAuthorizationHeader = (
+export const createAuthorizationHeader = async (
   params: OAuthSignatureParams,
-): Result<string, OAuthError> => {
+): Promise<Result<string, OAuthError>> => {
   const { consumerKey, consumerSecret } = params.credentials;
   if (!consumerKey || !consumerSecret) {
     return err({
@@ -77,7 +77,7 @@ export const createAuthorizationHeader = (
       }
       : undefined;
 
-    const signResult = client.sign(params.method, params.url, {
+    const signResult = await client.sign(params.method, params.url, {
       token,
       body: params.parameters
         ? new URLSearchParams(params.parameters)
