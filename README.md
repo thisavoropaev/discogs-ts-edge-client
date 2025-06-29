@@ -44,7 +44,7 @@ import { DiscogsClient } from "discogs-ts-client";
 ## Quick Start
 
 ```typescript
-import { DiscogsClient } from "./src/index.ts";
+import { DiscogsClient } from "./src/mod.ts";
 
 // Initialize client
 const client = new DiscogsClient({

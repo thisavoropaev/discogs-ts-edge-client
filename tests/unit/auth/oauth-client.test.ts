@@ -1,5 +1,5 @@
 import { assertEquals, assertExists } from "@std/assert";
-import { createOAuthClient } from "@/auth/index.ts";
+import { createOAuthClient } from "@/auth/mod.ts";
 import type { OAuthCredentials } from "@/types/auth.ts";
 import { API_BASE_URL } from "@/config/constants.ts";
 

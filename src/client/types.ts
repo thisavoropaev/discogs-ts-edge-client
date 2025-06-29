@@ -3,7 +3,7 @@ import type {
   DiscogsApiError,
   EndpointResponseMap,
   RequestRawParams,
-} from "@/types/index.ts";
+} from "@/types/mod.ts";
 import type { OAuthCredentials } from "@/types/auth.ts";
 
 export type DiscogsClientConfig = {

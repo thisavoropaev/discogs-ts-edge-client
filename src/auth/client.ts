@@ -3,7 +3,7 @@ import type { HttpMethod, OAuthCredentials, OAuthError } from "@/types/auth.ts";
 import {
   createAuthorizationHeader,
   generateOAuthSignature,
-} from "@/auth/index.ts";
+} from "@/auth/mod.ts";
 
 export type OAuthClientConfig = {
   credentials: OAuthCredentials;

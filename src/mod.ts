@@ -2,7 +2,7 @@ export {
   createAuthorizationHeader,
   createOAuthClient,
   generateOAuthSignature,
-} from "@/auth/index.ts";
+} from "@/auth/mod.ts";
 
 export { createDiscogsClient } from "@/client/discogs-client.ts";
 export type {
