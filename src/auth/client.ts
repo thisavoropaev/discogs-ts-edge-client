@@ -1,0 +1,124 @@
+import { err, ok, Result } from "neverthrow";
+import type { HttpMethod, OAuthCredentials, OAuthError } from "@/types/auth.ts";
+import {
+  createAuthorizationHeader,
+  generateOAuthSignature,
+} from "@/auth/index.ts";
+
+export type OAuthClientConfig = {
+  credentials: OAuthCredentials;
+  baseUrl?: string;
+};
+
+export type RequestOptions = {
+  headers?: Record<string, string>;
+  body?: string | URLSearchParams | FormData;
+  parameters?: Record<string, string>;
+};
+
+export type OAuthClient = {
+  sign: (
+    method: HttpMethod,
+    url: string,
+    parameters?: Record<string, string>,
+  ) => Result<string, OAuthError>;
+  createAuthHeader: (
+    method: HttpMethod,
+    url: string,
+    parameters?: Record<string, string>,
+  ) => Result<string, OAuthError>;
+  request: (
+    method: HttpMethod,
+    endpoint: string,
+    options?: RequestOptions,
+  ) => Promise<Result<Response, OAuthError>>;
+};
+
+export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
+  const { credentials, baseUrl = "" } = config;
+
+  const buildFullUrl = (endpoint: string): string => {
+    if (endpoint.startsWith("http")) {
+      return endpoint;
+    }
+    return baseUrl
+      ? `${baseUrl.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`
+      : endpoint;
+  };
+
+  const sign = (
+    method: HttpMethod,
+    url: string,
+    parameters?: Record<string, string>,
+  ): Result<string, OAuthError> => {
+    return generateOAuthSignature({
+      credentials,
+      method,
+      url,
+      parameters,
+    });
+  };
+
+  const createAuthHeader = (
+    method: HttpMethod,
+    url: string,
+    parameters?: Record<string, string>,
+  ): Result<string, OAuthError> => {
+    return createAuthorizationHeader({
+      credentials,
+      method,
+      url,
+      parameters,
+    });
+  };
+
+  const request = async (
+    method: HttpMethod,
+    endpoint: string,
+    options: RequestOptions = {},
+  ): Promise<Result<Response, OAuthError>> => {
+    const fullUrl = buildFullUrl(endpoint);
+    const { headers = {}, body, parameters } = options;
+
+    const authHeaderResult = createAuthHeader(
+      method,
+      fullUrl,
+      parameters,
+    );
+
+    if (authHeaderResult.isErr()) {
+      return err(authHeaderResult.error);
+    }
+
+    const authHeader = authHeaderResult.value;
+
+    const requestHeaders = new Headers({
+      ...headers,
+      Authorization: authHeader,
+    });
+
+    const requestOptions: RequestInit = {
+      method,
+      headers: requestHeaders,
+      body,
+    };
+
+    try {
+      const response = await fetch(fullUrl, requestOptions);
+      return ok(response);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err({
+        code: "NETWORK_ERROR",
+        message: `Network request failed: ${message}`,
+        details: error,
+      });
+    }
+  };
+
+  return {
+    sign,
+    createAuthHeader,
+    request,
+  };
+};

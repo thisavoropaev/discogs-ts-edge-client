@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Use English only for all comments.
+Add comments only when the logic is non-obvious or when explicitly requested.
+Keep comments short and concise (ideally 1–2 lines).

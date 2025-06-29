@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "lib": ["deno.window"],
+    "strict": true
+  },
+  "imports": {
+    "neverthrow": "npm:neverthrow@6.2.2",
+    "deno:oauth-1.0a": "https://raw.githubusercontent.com/thisavoropaev/deno-oauth-1.0a/main/mod.ts",
+    "deno:dotenv": "https://deno.land/std@0.224.0/dotenv/load.ts",
+    "@std/testing": "https://deno.land/std@0.208.0/testing/mod.ts",
+    "@std/assert": "https://deno.land/std@0.208.0/assert/mod.ts",
+    "@/": "./src/",
+    "@tests/": "./tests/"
+  },
+  "tasks": {
+    "test": "deno test --allow-net --allow-env --allow-read",
+    "test:unit": "deno test tests/unit/ --allow-net --allow-env",
+    "test:integration": "deno test tests/integration/ --allow-net --allow-env --allow-read",
+    "lint": "deno lint",
+    "fmt": "deno fmt",
+    "check": "deno check src/index.ts",
+    "start": "deno run --allow-net src/index.ts"
+  },
+  "exclude": ["node_modules", "dist", "coverage"]
+}

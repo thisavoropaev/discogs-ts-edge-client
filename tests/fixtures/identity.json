@@ -1,0 +1,16 @@
+{
+  "identity": {
+    "id": 1,
+    "username": "example",
+    "resource_url": "https://api.discogs.com/users/example",
+    "consumer_name": "Your Application Name"
+  },
+  "errorResponses": {
+    "unauthorized": {
+      "message": "You must authenticate to access this resource."
+    },
+    "forbidden": {
+      "message": "You don't have permission to access this resource."
+    }
+  }
+}
