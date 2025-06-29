@@ -135,9 +135,10 @@ export interface Video {
 }
 
 export interface GetReleaseRatingByUserResponse {
-    username: string;
-    release_id: number;
-    rating: number;
+  username: string;
+  release_id: number;
+  rating: number;
 }
 
-export interface UpdateReleaseRatingByUserResponse extends GetReleaseRatingByUserResponse {}
+export interface UpdateReleaseRatingByUserResponse
+  extends GetReleaseRatingByUserResponse {}

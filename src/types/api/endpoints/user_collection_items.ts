@@ -1,4 +1,4 @@
-import type { BasicInformation, Pagination } from './common.ts';
+import type { BasicInformation, Pagination } from "./common.ts";
 
 export interface GetUserCollectionItemsResponse {
   pagination: Pagination;

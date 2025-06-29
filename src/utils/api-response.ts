@@ -3,7 +3,7 @@ import { err, ok } from "neverthrow";
 import type { DiscogsApiError } from "@/types/index.ts";
 
 export const handleApiResponse = async <T>(
-  response: Response
+  response: Response,
 ): Promise<Result<T, DiscogsApiError>> => {
   try {
     const text = await response.text();

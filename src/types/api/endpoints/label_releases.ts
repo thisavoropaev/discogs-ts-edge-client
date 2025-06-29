@@ -1,4 +1,4 @@
-import type { Pagination } from './common.ts';
+import type { Pagination } from "./common.ts";
 
 export interface GetLabelReleasesResponse {
   pagination: Pagination;

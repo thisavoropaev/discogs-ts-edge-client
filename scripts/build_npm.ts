@@ -11,7 +11,8 @@ await build({
   package: {
     name: "discogs-ts-edge-client",
     version: Deno.args[0],
-    description: "A TypeScript client for the Discogs API for server and edge environments.",
+    description:
+      "A TypeScript client for the Discogs API for server and edge environments.",
     license: "MIT",
     repository: {
       type: "git",

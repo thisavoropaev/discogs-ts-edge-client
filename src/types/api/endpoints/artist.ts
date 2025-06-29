@@ -1,4 +1,4 @@
-import type { Image } from './release.ts';
+import type { Image } from "./release.ts";
 
 export interface GetArtistResponse {
   id: number;
