@@ -1,7 +1,7 @@
 # Discogs TypeScript Client for Edge Runtime
 
 A modern TypeScript client for the Discogs API, optimized for edge runtime
-environments like Vercel Edge Functions and Cloudflare Workers.
+environments like Vercel Edge Functions and Cloudflare Workers, also suitable for Node.js as well.
 
 ## Features
 
