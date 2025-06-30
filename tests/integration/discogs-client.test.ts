@@ -1,4 +1,4 @@
-import "deno:dotenv";
+import "dotenv";
 import { assertEquals, assertExists } from "@std/assert";
 import { createDiscogsClient } from "@/client/discogs-client.ts";
 import type { DiscogsClient } from "@/client/types.ts";

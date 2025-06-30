@@ -4,11 +4,9 @@
   },
   "imports": {
     "neverthrow": "npm:neverthrow@6.2.2",
-    "deno:dotenv": "https://deno.land/std@0.224.0/dotenv/load.ts",
-    "@srmtd/testing": "https://deno.land/std@0.208.0/testing/mod.ts",
-    "@std/assert": "https://deno.land/std@0.208.0/assert/mod.ts",
-    "@/": "./src/",
-    "@tests/": "./tests/"
+    "dotenv": "jsr:@std/dotenv/load",
+    "@std/assert": "jsr:@std/assert",
+    "@/": "./src/"
   },
   "tasks": {
     "test": "deno test --allow-net --allow-env --allow-read",
