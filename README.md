@@ -21,7 +21,6 @@ for Node.js as well.
 - ✅ Cloudflare Workers
 - ✅ Deno Deploy
 - ✅ Deno Runtime
-- ✅ Modern browsers
 - ✅ Node.js 18+ (ESM only)
 
 ## Installation
@@ -29,13 +28,13 @@ for Node.js as well.
 ### For Deno
 
 ```typescript
-import { DiscogsClient } from "https://deno.land/x/discogs_client/mod.ts";
+import { DiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
 ```
 
 ### For npm/Node.js (after publishing)
 
 ```bash
-npm install discogs-deno-client
+deno add jsr:@thisavoropaev/discogs-deno-client"
 ```
 
 ```typescript
@@ -70,7 +69,7 @@ console.log(release.data);
 
 ```typescript
 // api/discogs.ts
-import { DiscogsClient } from "discogs-deno-client";
+import { DiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client"";
 import { NextRequest } from "next/server";
 
 export const config = {
@@ -103,7 +102,7 @@ export default async function handler(req: NextRequest) {
 ### Cloudflare Worker
 
 ```typescript
-import { DiscogsClient } from "discogs-deno-client";
+import { DiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client"";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -134,7 +133,7 @@ export default {
 
 ### Prerequisites
 
-- [Deno](https://deno.land/) 1.40+
+- [Deno](https://deno.land/) 2.x
 
 ### Setup
 
@@ -200,16 +199,6 @@ type DiscogsClientConfig = {
   tokenSecret?: string; // OAuth access token secret
 };
 ```
-
-#### Methods
-
-- `search(query: string, options?: SearchOptions)` - Search the Discogs database
-- `getRelease(id: number)` - Get release details
-- `getMaster(id: number)` - Get master release details
-- `getArtist(id: number)` - Get artist details
-- `getLabel(id: number)` - Get label details
-- `getIdentity()` - Get authenticated user identity
-- `getProfile(username: string)` - Get user profile
 
 ## Environment Variables
 
