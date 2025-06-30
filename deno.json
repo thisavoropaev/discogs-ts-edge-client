@@ -1,9 +1,19 @@
 {
+  "name": "@thisavoropaev/discogs-ts-client",
+  "version": "1.0.0",
+  "description": "A modern TypeScript client for the Discogs API, optimized for edge and server runtimes (Deno, Node.js, Cloudflare, Vercel, etc).",
+  "keywords": ["discogs", "typescript", "api", "oauth", "edge", "deno", "nodejs"],
+  "license": "MIT",
+  "repository": "https://github.com/thisavoropaev/discogs-ts-client",
+  "exports": {
+    ".": "./src/mod.ts"
+  },
   "compilerOptions": {
     "strict": true
   },
   "imports": {
     "neverthrow": "npm:neverthrow@6.2.2",
+    "oauth-1a": "jsr:@thisavoropaev/oauth-1a@1.0.1",
     "dotenv": "jsr:@std/dotenv/load",
     "@std/assert": "jsr:@std/assert",
     "@/": "./src/"
