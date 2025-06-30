@@ -24,7 +24,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
 
   const client: DiscogsClient = createDiscogsClient({
     credentials,
-    userAgent: "DiscogsClient/1.0 +https://github.com/test/discogs-ts-client",
+    userAgent: "DiscogsClient/1.0 +https://github.com/test/discogs-deno-client",
   });
 
   await t.step(

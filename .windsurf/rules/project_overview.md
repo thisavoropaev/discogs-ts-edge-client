@@ -4,11 +4,11 @@ description:
 globs:
 ---
 
-# Project Overview: discogs-ts-client
+# Project Overview: discogs-deno-client
 
 ## Purpose
 
-This project, `discogs-ts-client`, is a TypeScript client for the Discogs API,
+This project, `discogs-deno-client`, is a TypeScript client for the Discogs API,
 primarily focused on simplifying OAuth 1.0a request signing in server and edge
 environments (Node.js, Deno, Cloudflare Workers, Edge Functions). It assumes
 OAuth tokens are already obtained.

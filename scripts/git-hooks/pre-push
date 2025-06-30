@@ -3,7 +3,7 @@
 set -e
 
 echo "Running Deno lint..."
-denod task lint
+deno task lint
 
 echo "Running Deno check..."
 deno task check

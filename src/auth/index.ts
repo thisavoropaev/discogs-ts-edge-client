@@ -1,4 +1,5 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import type { Result } from "neverthrow";
 import * as oauth from "jsr:@thisavoropaev/oauth-1a";
 import type { OAuthError, OAuthSignatureParams } from "@/types/auth.ts";
 

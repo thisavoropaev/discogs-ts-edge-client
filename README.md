@@ -1,7 +1,8 @@
 # Discogs TypeScript Client for Edge Runtime
 
 A modern TypeScript client for the Discogs API, optimized for edge runtime
-environments like Vercel Edge Functions and Cloudflare Workers, also suitable for Node.js as well.
+environments like Vercel Edge Functions and Cloudflare Workers, also suitable
+for Node.js as well.
 
 ## Features
 
@@ -34,11 +35,11 @@ import { DiscogsClient } from "https://deno.land/x/discogs_client/mod.ts";
 ### For npm/Node.js (after publishing)
 
 ```bash
-npm install discogs-ts-client
+npm install discogs-deno-client
 ```
 
 ```typescript
-import { DiscogsClient } from "discogs-ts-client";
+import { DiscogsClient } from "discogs-deno-client";
 ```
 
 ## Quick Start
@@ -69,7 +70,7 @@ console.log(release.data);
 
 ```typescript
 // api/discogs.ts
-import { DiscogsClient } from "discogs-ts-client";
+import { DiscogsClient } from "discogs-deno-client";
 import { NextRequest } from "next/server";
 
 export const config = {
@@ -102,7 +103,7 @@ export default async function handler(req: NextRequest) {
 ### Cloudflare Worker
 
 ```typescript
-import { DiscogsClient } from "discogs-ts-client";
+import { DiscogsClient } from "discogs-deno-client";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -140,7 +141,7 @@ export default {
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd discogs-ts-client
+cd discogs-deno-client
 
 # Run tests
 deno task test

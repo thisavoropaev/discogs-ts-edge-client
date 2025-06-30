@@ -7,6 +7,7 @@
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/internal@^1.0.6": "1.0.8",
     "jsr:@thisavoropaev/oauth-1a@*": "1.0.1",
+    "jsr:@thisavoropaev/oauth-1a@1.0.1": "1.0.1",
     "npm:neverthrow@6.2.2": "6.2.2"
   },
   "jsr": {
@@ -45,6 +46,7 @@
     "dependencies": [
       "jsr:@std/assert@*",
       "jsr:@std/dotenv@*",
+      "jsr:@thisavoropaev/oauth-1a@1.0.1",
       "npm:neverthrow@6.2.2"
     ]
   }

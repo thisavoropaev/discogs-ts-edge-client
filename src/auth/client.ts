@@ -1,4 +1,5 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import type { Result } from "neverthrow";
 import type { HttpMethod, OAuthCredentials, OAuthError } from "@/types/auth.ts";
 import {
   createAuthorizationHeader,
