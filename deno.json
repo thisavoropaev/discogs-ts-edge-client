@@ -1,6 +1,6 @@
 {
   "name": "@thisavoropaev/discogs-deno-client",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A modern TypeScript client for the Discogs API, optimized for edge and server runtimes (Deno, Node.js, Cloudflare, Vercel, etc).",
   "keywords": [
     "discogs",
