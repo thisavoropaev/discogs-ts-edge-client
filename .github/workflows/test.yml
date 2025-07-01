@@ -15,4 +15,4 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: 2.x
-      - run: deno test --allow-net=localhost
+      - run: deno task test
