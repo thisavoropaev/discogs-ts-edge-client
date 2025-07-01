@@ -1,8 +1,8 @@
-import {
+import type {
   GetReleaseResponse,
   GetUserIdentityResponse,
   GetUserProfileResponse,
-} from "./endpoints/index.ts";
+} from "./endpoints/mod.ts";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 

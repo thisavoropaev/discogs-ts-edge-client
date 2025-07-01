@@ -1,4 +1,4 @@
-import type { Pagination } from './common.ts';
+import type { Pagination } from "./common.ts";
 
 export interface GetArtistReleasesResponse {
   pagination: Pagination;
@@ -13,7 +13,7 @@ export interface ArtistRelease {
   artist: string;
   role: string;
   year: number;
-  type: 'master' | 'release';
+  type: "master" | "release";
   format?: string;
   label?: string;
   status?: string;

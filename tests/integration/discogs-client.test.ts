@@ -1,4 +1,4 @@
-import "deno:dotenv";
+import "dotenv";
 import { assertEquals, assertExists } from "@std/assert";
 import { createDiscogsClient } from "@/client/discogs-client.ts";
 import type { DiscogsClient } from "@/client/types.ts";
@@ -24,7 +24,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
 
   const client: DiscogsClient = createDiscogsClient({
     credentials,
-    userAgent: "DiscogsClient/1.0 +https://github.com/test/discogs-ts-client",
+    userAgent: "DiscogsClient/1.0 +https://github.com/test/discogs-deno-client",
   });
 
   await t.step(
@@ -49,7 +49,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(typeof identity.resource_url, "string");
 
       console.log(`✅ Identity: ${identity.username} (ID: ${identity.id})`);
-    }
+    },
   );
 
   await t.step(
@@ -79,9 +79,9 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(release.id, parseInt(releaseId));
 
       console.log(
-        `✅ Release: ${release.title} by ${release.artists[0]?.name}`
+        `✅ Release: ${release.title} by ${release.artists[0]?.name}`,
       );
-    }
+    },
   );
 
   await t.step(
@@ -120,7 +120,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(profile.username, username);
 
       console.log(`✅ User Profile: ${profile.username} (ID: ${profile.id})`);
-    }
+    },
   );
 
   await t.step(
@@ -139,10 +139,10 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
         assertExists(result.error.message);
         assertExists(result.error.type);
         console.log(
-          `✅ Error handling: ${result.error.type} - ${result.error.message}`
+          `✅ Error handling: ${result.error.type} - ${result.error.message}`,
         );
       }
-    }
+    },
   );
 
   await t.step(
@@ -165,7 +165,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertExists(release.title);
 
       console.log(`✅ Query params: ${release.title}`);
-    }
+    },
   );
 
   await t.step(
@@ -182,7 +182,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       if (result.isErr()) {
         console.error("Custom headers error:", result.error);
         throw new Error(
-          `Custom headers request failed: ${result.error.message}`
+          `Custom headers request failed: ${result.error.message}`,
         );
       }
 
@@ -191,6 +191,6 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertExists(identity.username);
 
       console.log(`✅ Custom headers: ${identity.username}`);
-    }
+    },
   );
 });

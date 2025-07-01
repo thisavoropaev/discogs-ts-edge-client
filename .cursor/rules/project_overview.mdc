@@ -3,10 +3,10 @@ description:
 globs: 
 alwaysApply: true
 ---
-# Project Overview: discogs-ts-client
+# Project Overview: discogs-deno-client
 
 ## Purpose
-This project, `discogs-ts-client`, is a TypeScript client for the Discogs API, primarily focused on simplifying OAuth 1.0a request signing in server and edge environments (Node.js, Deno, Cloudflare Workers, Edge Functions). It assumes OAuth tokens are already obtained.
+This project, `discogs-deno-client`, is a TypeScript client for the Discogs API, primarily focused on simplifying OAuth 1.0a request signing in server and edge environments (Node.js, Deno, Cloudflare Workers, Edge Functions). It assumes OAuth tokens are already obtained.
 
 ## Frontend Usage Warning
 **Crucial:** Due to OAuth 1.0a security requirements (secrets), direct use in browser environments is prohibited. Frontend applications should use a server-side proxy. However, TypeScript types and data models from this package are safe to use on the frontend for strict typing.

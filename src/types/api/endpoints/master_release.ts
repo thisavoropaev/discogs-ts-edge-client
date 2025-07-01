@@ -1,4 +1,4 @@
-import type { Artist, Image, Track, Video } from './release.ts';
+import type { Artist, Image, Track, Video } from "./release.ts";
 
 export interface GetMasterReleaseResponse {
   id: number;

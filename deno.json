@@ -1,16 +1,30 @@
 {
+  "name": "@thisavoropaev/discogs-deno-client",
+  "version": "0.1.0",
+  "description": "A modern TypeScript client for the Discogs API, optimized for edge and server runtimes (Deno, Node.js, Cloudflare, Vercel, etc).",
+  "keywords": [
+    "discogs",
+    "typescript",
+    "api",
+    "oauth",
+    "edge",
+    "deno",
+    "nodejs"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/thisavoropaev/discogs-deno-client",
+  "exports": {
+    ".": "./src/mod.ts"
+  },
   "compilerOptions": {
-    "lib": ["deno.window"],
     "strict": true
   },
   "imports": {
     "neverthrow": "npm:neverthrow@6.2.2",
-    "deno:oauth-1.0a": "https://raw.githubusercontent.com/thisavoropaev/deno-oauth-1.0a/main/mod.ts",
-    "deno:dotenv": "https://deno.land/std@0.224.0/dotenv/load.ts",
-    "@std/testing": "https://deno.land/std@0.208.0/testing/mod.ts",
-    "@std/assert": "https://deno.land/std@0.208.0/assert/mod.ts",
-    "@/": "./src/",
-    "@tests/": "./tests/"
+    "oauth-1a": "jsr:@thisavoropaev/oauth-1a@1.0.1",
+    "dotenv": "jsr:@std/dotenv/load",
+    "@std/assert": "jsr:@std/assert",
+    "@/": "./src/"
   },
   "tasks": {
     "test": "deno test --allow-net --allow-env --allow-read",
@@ -18,8 +32,7 @@
     "test:integration": "deno test tests/integration/ --allow-net --allow-env --allow-read",
     "lint": "deno lint",
     "fmt": "deno fmt",
-    "check": "deno check src/index.ts",
-    "start": "deno run --allow-net src/index.ts"
+    "check": "deno check src/mod.ts"
   },
   "exclude": ["node_modules", "dist", "coverage"]
 }

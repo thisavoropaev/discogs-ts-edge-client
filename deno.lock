@@ -1,23 +1,52 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@std/assert@*": "1.0.13",
+    "jsr:@std/crypto@^1.0.5": "1.0.5",
+    "jsr:@std/dotenv@*": "0.225.5",
+    "jsr:@std/encoding@^1.0.10": "1.0.10",
+    "jsr:@std/internal@^1.0.6": "1.0.8",
+    "jsr:@thisavoropaev/oauth-1a@*": "1.0.1",
+    "jsr:@thisavoropaev/oauth-1a@1.0.1": "1.0.1",
     "npm:neverthrow@6.2.2": "6.2.2"
+  },
+  "jsr": {
+    "@std/assert@1.0.13": {
+      "integrity": "ae0d31e41919b12c656c742b22522c32fb26ed0cba32975cb0de2a273cb68b29",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/crypto@1.0.5": {
+      "integrity": "0dcfbb319fe0bba1bd3af904ceb4f948cde1b92979ec1614528380ed308a3b40"
+    },
+    "@std/dotenv@0.225.5": {
+      "integrity": "9ce6f9d0ec3311f74a32535aa1b8c62ed88b1ab91b7f0815797d77a6f60c922f"
+    },
+    "@std/encoding@1.0.10": {
+      "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
+    },
+    "@std/internal@1.0.8": {
+      "integrity": "fc66e846d8d38a47cffd274d80d2ca3f0de71040f855783724bb6b87f60891f5"
+    },
+    "@thisavoropaev/oauth-1a@1.0.1": {
+      "integrity": "74142a689d182a09df879f49b877acecf05319c00cef1073261cd1dde5a1fd7b",
+      "dependencies": [
+        "jsr:@std/crypto",
+        "jsr:@std/encoding"
+      ]
+    }
   },
   "npm": {
     "neverthrow@6.2.2": {
       "integrity": "sha512-POR1FACqdK9jH0S2kRPzaZEvzT11wsOxLW520PQV/+vKi9dQe+hXq19EiOvYx7lSRaF5VB9lYGsPInynrnN05w=="
     }
   },
-  "remote": {
-    "https://deno.land/std@0.91.0/encoding/base64.ts": "eecae390f1f1d1cae6f6c6d732ede5276bf4b9cd29b1d281678c054dc5cc009e",
-    "https://deno.land/std@0.91.0/hash/sha1.ts": "1cca324b4b253885a47f121adafcfac55b4cc96113e22b338e1db26f37a730b8",
-    "https://deno.land/std@0.91.0/hash/sha256.ts": "2a06afd9c27942b87ffc8a93b3270065b5fe4ea144fe0939e5d050bfb86d40db",
-    "https://raw.githubusercontent.com/thisavoropaev/deno-oauth-1.0a/main/client.ts": "62269cc3a7fb996c0de3923cc2cf92073aecafeab9740f75d4e9fb2e167ccb99",
-    "https://raw.githubusercontent.com/thisavoropaev/deno-oauth-1.0a/main/mod.ts": "5450bd25dedb34baa6c886dc7f881030ffd9d752273a36aade54c7b2235fb8f9",
-    "https://raw.githubusercontent.com/thisavoropaev/deno-oauth-1.0a/main/sign.ts": "d3e1aab000af1a519079c86b9ec3831c64770bd5653cef5c86752d4328cda165"
-  },
   "workspace": {
     "dependencies": [
+      "jsr:@std/assert@*",
+      "jsr:@std/dotenv@*",
+      "jsr:@thisavoropaev/oauth-1a@1.0.1",
       "npm:neverthrow@6.2.2"
     ]
   }

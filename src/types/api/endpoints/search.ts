@@ -1,4 +1,4 @@
-import type { Pagination } from './common.ts';
+import type { Pagination } from "./common.ts";
 
 export interface GetSearchResponse {
   pagination: Pagination;
@@ -18,7 +18,7 @@ interface SearchResultBase {
 }
 
 export interface SearchResultRelease extends SearchResultBase {
-  type: 'release';
+  type: "release";
   country?: string;
   format?: string[];
   label?: string[];
@@ -34,7 +34,7 @@ export interface SearchResultRelease extends SearchResultBase {
 }
 
 export interface SearchResultMaster extends SearchResultBase {
-  type: 'master';
+  type: "master";
   country?: string;
   format?: string[];
   label?: string[];
@@ -50,11 +50,11 @@ export interface SearchResultMaster extends SearchResultBase {
 }
 
 export interface SearchResultArtist extends SearchResultBase {
-  type: 'artist';
+  type: "artist";
 }
 
 export interface SearchResultLabel extends SearchResultBase {
-  type: 'label';
+  type: "label";
   catno?: string;
 }
 

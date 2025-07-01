@@ -2,7 +2,7 @@ export {
   createAuthorizationHeader,
   createOAuthClient,
   generateOAuthSignature,
-} from "@/auth/index.ts";
+} from "@/auth/mod.ts";
 
 export { createDiscogsClient } from "@/client/discogs-client.ts";
 export type {
@@ -15,7 +15,7 @@ export type {
   ApiResult,
   DiscogsApiError,
   DiscogsApiErrorType,
-} from "@/types/index.ts";
+} from "@/types/mod.ts";
 
 export type {
   HttpMethod,

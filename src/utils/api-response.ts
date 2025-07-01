@@ -1,9 +1,9 @@
 import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-import type { DiscogsApiError } from "@/types/index.ts";
+import type { DiscogsApiError } from "@/types/mod.ts";
 
 export const handleApiResponse = async <T>(
-  response: Response
+  response: Response,
 ): Promise<Result<T, DiscogsApiError>> => {
   try {
     const text = await response.text();
