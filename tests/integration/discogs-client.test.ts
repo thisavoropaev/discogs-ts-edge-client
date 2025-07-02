@@ -1,7 +1,6 @@
 import "dotenv";
 import { assertEquals, assertExists } from "@std/assert";
 import { createDiscogsClient } from "@/client/discogs-client.ts";
-import type { DiscogsClient } from "@/client/types.ts";
 
 Deno.test("Discogs Client Integration Tests", async (t) => {
   const credentials = {
@@ -22,7 +21,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
     return;
   }
 
-  const client: DiscogsClient = createDiscogsClient({
+  const client = createDiscogsClient({
     credentials,
     userAgent: "DiscogsClient/1.0 +https://github.com/test/discogs-deno-client",
   });
