@@ -1,9 +1,8 @@
 import { err, ok } from "neverthrow";
 import type { Result } from "neverthrow";
 import * as oauth from "jsr:@thisavoropaev/oauth-1a";
-import type { OAuthError, OAuthSignatureParams } from "@/types/auth.ts";
-
-export { createOAuthClient } from "@/auth/client.ts";
+import type { OAuthError, OAuthSignatureParams } from "../types/auth.ts";
+export { createOAuthClient } from "../auth/client.ts";
 
 export const generateOAuthSignature = async (
   params: OAuthSignatureParams,

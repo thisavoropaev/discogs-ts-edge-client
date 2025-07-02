@@ -1,10 +1,11 @@
 import { err, ok } from "neverthrow";
 import type { Result } from "neverthrow";
-import type { HttpMethod, OAuthCredentials, OAuthError } from "@/types/auth.ts";
-import {
-  createAuthorizationHeader,
-  generateOAuthSignature,
-} from "@/auth/mod.ts";
+import type {
+  HttpMethod,
+  OAuthCredentials,
+  OAuthError,
+} from "../types/auth.ts";
+import { createAuthorizationHeader, generateOAuthSignature } from "./mod.ts";
 
 export type OAuthClientConfig = {
   credentials: OAuthCredentials;

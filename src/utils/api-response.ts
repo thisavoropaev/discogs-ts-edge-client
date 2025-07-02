@@ -1,6 +1,6 @@
 import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-import type { DiscogsApiError } from "@/types/mod.ts";
+import type { DiscogsApiError } from "../types/mod.ts";
 
 export const handleApiResponse = async <T>(
   response: Response,

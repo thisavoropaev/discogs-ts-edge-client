@@ -11,10 +11,10 @@ import type {
   DiscogsClientConfig,
   DiscogsClientOptions,
 } from "./types.ts";
-import { createOAuthClient } from "@/auth/client.ts";
-import { API_BASE_URL } from "@/config/constants.ts";
-import { buildPath, buildQueryString } from "@/utils/url.ts";
-import { handleApiResponse } from "@/utils/api-response.ts";
+import { createOAuthClient } from "../auth/client.ts";
+import { API_BASE_URL } from "../config/constants.ts";
+import { buildPath, buildQueryString } from "../utils/url.ts";
+import { handleApiResponse } from "../utils/api-response.ts";
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
