@@ -16,9 +16,9 @@ export type DiscogsApiError = {
 export type ApiResult<T> =
   | { success: true; data: T }
   | {
-      success: false;
-      error: DiscogsApiError;
-    };
+    success: false;
+    error: DiscogsApiError;
+  };
 
 export type PaginatedResponse<T> = {
   pagination: {

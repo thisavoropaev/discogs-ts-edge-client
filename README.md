@@ -29,125 +29,13 @@ for Node.js as well.
 
 ## Installation
 
-### For Deno
+### For Deno/Node
 
 ```typescript
 import { createDiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
 ```
 
-### For npm/Node.js (after publishing)
-
-```bash
-deno add @thisavoropaev/discogs-deno-client
-```
-
-```typescript
-import { createDiscogsClient } from "discogs-deno-client";
-```
-
-## Quick Start
-
-```typescript
-import { createDiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
-
-// Initialize client
-const client = createDiscogsClient({
-  credentials: {
-    consumerKey: "your-consumer-key",
-    consumerSecret: "your-consumer-secret",
-    token: "your-access-token", // optional
-    tokenSecret: "your-access-token-secret", // optional
-  },
-  userAgent: "MyApp/1.0 +https://github.com/your-username/your-app",
-});
-
-// Get release details
-const result = await client.request({
-  method: "GET",
-  endpoint: "/releases/:release_id",
-  pathParams: { release_id: "249504" }, // Nirvana - Nevermind
-});
-
-// Handle success or error with Result pattern
-if (result.isErr()) {
-  console.error("Error:", result.error);
-} else {
-  const release = result.value;
-  console.log(`Release: ${release.title} by ${release.artists[0]?.name}`);
-}
-```
-
-## Using the Result Pattern
-
-The client uses the [neverthrow](https://github.com/supermacro/neverthrow)
-library for error handling:
-
-```typescript
-// Making a request with query parameters
-const result = await client.request({
-  method: "GET",
-  endpoint: "/releases/:release_id",
-  pathParams: { release_id: "249504" },
-  queryParams: { curr_abbr: "USD" },
-});
-
-if (result.isErr()) {
-  console.error("Error:", result.error.message);
-  console.error("Error type:", result.error.type);
-  return;
-}
-
-// Safely access the successful result
-const release = result.value;
-console.log(`${release.title} (${release.year})`);
-```
-
-## Edge Function Examples
-
-### Vercel Edge Function
-
-```typescript
-// api/discogs.ts
-import { createDiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
-import { NextRequest } from "next/server";
-
-export const config = {
-  runtime: "edge",
-};
-
-export default async function handler(req: NextRequest) {
-  const client = createDiscogsClient({
-    credentials: {
-      consumerKey: process.env.DISCOGS_CONSUMER_KEY || "",
-      consumerSecret: process.env.DISCOGS_CONSUMER_SECRET || "",
-      token: process.env.DISCOGS_ACCESS_TOKEN || "",
-      tokenSecret: process.env.DISCOGS_ACCESS_TOKEN_SECRET || "",
-    },
-    userAgent: "MyApp/1.0 +https://github.com/your-username/your-app",
-  });
-
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get("q");
-
-  if (!query) {
-    return new Response("Missing query parameter", { status: 400 });
-  }
-
-  const result = await client.request({
-    method: "GET",
-    endpoint: "/database/search",
-    queryParams: { q: query },
-  });
-
-  if (result.isErr()) {
-    return new Response(`Search failed: ${result.error.message}`, {
-      status: 500,
-    });
-  }
-
-  return Response.json(result.value);
-}
-```
+## Usage Examples
 
 ### Cloudflare Worker
 
@@ -190,6 +78,31 @@ export default {
 };
 ```
 
+## Using the Result Pattern
+
+The client uses the [neverthrow](https://github.com/supermacro/neverthrow)
+library for error handling:
+
+```typescript
+// Making a request with query parameters
+const result = await client.request({
+  method: "GET",
+  endpoint: "/releases/:release_id",
+  pathParams: { release_id: "249504" },
+  queryParams: { curr_abbr: "USD" },
+});
+
+if (result.isErr()) {
+  console.error("Error:", result.error.message);
+  console.error("Error type:", result.error.type);
+  return;
+}
+
+// Safely access the successful result
+const release = result.value;
+console.log(`${release.title} (${release.year})`);
+```
+
 ## Development
 
 ### Prerequisites
@@ -200,7 +113,7 @@ export default {
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone git@github.com:thisavoropaev/discogs-deno-client.git
 cd discogs-deno-client
 
 # Run tests
@@ -214,16 +127,6 @@ deno task fmt
 
 # Lint code
 deno task lint
-```
-
-### Building
-
-```bash
-# Build ESM bundle
-deno task build:esm
-
-# Simple bundle (for testing)
-deno task build
 ```
 
 ### Testing
@@ -296,9 +199,9 @@ type DiscogsClientConfig = {
 client.request({
   method: "GET" | "POST" | "PUT" | "DELETE", // HTTP method
   endpoint: string, // API endpoint path with placeholders
-  pathParams?: Record<string, string | number>, // Path parameters
-  queryParams?: Record<string, string>, // Query parameters
-  headers?: Record<string, string>, // Additional headers
+  pathParams: Record<string, string | number>, // Path parameters
+  queryParams: Record<string, string>, // Query parameters
+  headers: Record<string, string>, // Additional headers
 });
 ```
 
