@@ -13,7 +13,7 @@ import type {
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
-  _options: DiscogsClientOptions = {}
+  _options: DiscogsClientOptions = {},
 ): DiscogsClient => {
   const oauthClient: OAuthClient = createOAuthClient({
     credentials: config.credentials,
@@ -23,9 +23,9 @@ export const createDiscogsClient = (
   return {
     request: async <
       TMethod extends keyof EndpointResponseMap,
-      TEndpoint extends keyof EndpointResponseMap[TMethod]
+      TEndpoint extends keyof EndpointResponseMap[TMethod],
     >(
-      params: RequestParams<TMethod, TEndpoint>
+      params: RequestParams<TMethod, TEndpoint>,
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
@@ -50,14 +50,14 @@ export const createDiscogsClient = (
       }
 
       return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
-        responseResult.value
+        responseResult.value,
       );
     },
   };
 };
 
 async function handleApiResponse<T>(
-  response: Response
+  response: Response,
 ): Promise<Result<T, DiscogsApiError>> {
   try {
     const text = await response.text();

@@ -2,7 +2,7 @@ import type { QueryParams } from "../types/common.ts";
 
 export const buildPath = (
   endpoint: string,
-  pathParams: Record<string, string>
+  pathParams: Record<string, string>,
 ): string => {
   let path = endpoint;
 
@@ -15,7 +15,7 @@ export const buildPath = (
 
 export const buildUrlWithParams = (
   initialUrl: string,
-  queryParams?: QueryParams
+  queryParams?: QueryParams,
 ) => {
   const url = new URL(initialUrl);
 

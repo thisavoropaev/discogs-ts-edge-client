@@ -47,7 +47,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(typeof identity.resource_url, "string");
 
       console.log(`✅ Identity: ${identity.username} (ID: ${identity.id})`);
-    }
+    },
   );
 
   await t.step(
@@ -77,9 +77,9 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(release.id, parseInt(releaseId));
 
       console.log(
-        `✅ Release: ${release.title} by ${release.artists[0]?.name}`
+        `✅ Release: ${release.title} by ${release.artists[0]?.name}`,
       );
-    }
+    },
   );
 
   await t.step(
@@ -118,7 +118,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(profile.username, username);
 
       console.log(`✅ User Profile: ${profile.username} (ID: ${profile.id})`);
-    }
+    },
   );
 
   await t.step(
@@ -137,10 +137,10 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
         assertExists(result.error.message);
         assertExists(result.error.type);
         console.log(
-          `✅ Error handling: ${result.error.type} - ${result.error.message}`
+          `✅ Error handling: ${result.error.type} - ${result.error.message}`,
         );
       }
-    }
+    },
   );
 
   await t.step(
@@ -163,7 +163,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertExists(release.title);
 
       console.log(`✅ Query params: ${release.title}`);
-    }
+    },
   );
 
   await t.step(
@@ -180,7 +180,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       if (result.isErr()) {
         console.error("Custom headers error:", result.error);
         throw new Error(
-          `Custom headers request failed: ${result.error.message}`
+          `Custom headers request failed: ${result.error.message}`,
         );
       }
 
@@ -189,7 +189,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertExists(identity.username);
 
       console.log(`✅ Custom headers: ${identity.username}`);
-    }
+    },
   );
 
   await t.step(
@@ -212,9 +212,9 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(Array.isArray(searchResults.results), true);
 
       console.log(
-        `✅ Search: Found ${searchResults.results.length} results for \"Nirvana\"`
+        `✅ Search: Found ${searchResults.results.length} results for \"Nirvana\"`,
       );
-    }
+    },
   );
 
   await t.step(
@@ -243,14 +243,14 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       if (result.isErr()) {
         console.error("Add to wantlist error:", result.error);
         throw new Error(
-          `Add to wantlist request failed: ${result.error.message}`
+          `Add to wantlist request failed: ${result.error.message}`,
         );
       }
 
       console.log(
-        `✅ Add to Wantlist: Added release ${releaseId} to ${username}'s wantlist`
+        `✅ Add to Wantlist: Added release ${releaseId} to ${username}'s wantlist`,
       );
-    }
+    },
   );
 
   // Clean up - remove from wantlist after test
@@ -280,10 +280,10 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
         // Don't fail the test if cleanup fails
       } else {
         console.log(
-          `🧹 Cleanup: Removed release ${releaseId} from ${username}'s wantlist`
+          `🧹 Cleanup: Removed release ${releaseId} from ${username}'s wantlist`,
         );
       }
-    }
+    },
   );
 
   await t.step(
@@ -299,7 +299,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       if (result.isErr()) {
         console.error("Master versions error:", result.error);
         throw new Error(
-          `Master versions request failed: ${result.error.message}`
+          `Master versions request failed: ${result.error.message}`,
         );
       }
 
@@ -309,9 +309,9 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(Array.isArray(versions.versions), true);
 
       console.log(
-        `✅ Master Versions: Found ${versions.versions.length} versions for master ID ${masterId}`
+        `✅ Master Versions: Found ${versions.versions.length} versions for master ID ${masterId}`,
       );
-    }
+    },
   );
 
   await t.step(
@@ -328,7 +328,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       if (result.isErr()) {
         console.error("Marketplace stats error:", result.error);
         throw new Error(
-          `Marketplace stats request failed: ${result.error.message}`
+          `Marketplace stats request failed: ${result.error.message}`,
         );
       }
 
@@ -342,7 +342,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
         assertExists("blocked_from_sale" in stats);
         assertEquals(
           typeof (stats as { blocked_from_sale: boolean }).blocked_from_sale,
-          "boolean"
+          "boolean",
         );
 
         const statsObj = stats as {
@@ -360,9 +360,9 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       }
 
       console.log(
-        `✅ Untyped Endpoint: Fetched marketplace stats for release ID ${releaseId}`
+        `✅ Untyped Endpoint: Fetched marketplace stats for release ID ${releaseId}`,
       );
-    }
+    },
   );
 
   await t.step(
@@ -390,7 +390,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(artist.id, parseInt(artistId));
 
       console.log(`✅ Artist: ${artist.name} (ID: ${artist.id})`);
-    }
+    },
   );
 
   await t.step(
@@ -418,7 +418,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       assertEquals(label.id, parseInt(labelId));
 
       console.log(`✅ Label: ${label.name} (ID: ${label.id})`);
-    }
+    },
   );
 
   await t.step(
@@ -444,7 +444,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       if (result.isErr()) {
         console.error("Collection folders error:", result.error);
         throw new Error(
-          `Collection folders request failed: ${result.error.message}`
+          `Collection folders request failed: ${result.error.message}`,
         );
       }
 
@@ -461,9 +461,9 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       }
 
       console.log(
-        `✅ Collection Folders: Found ${folders.folders.length} folders for user ${username}`
+        `✅ Collection Folders: Found ${folders.folders.length} folders for user ${username}`,
       );
-    }
+    },
   );
 
   await t.step(
@@ -480,7 +480,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       if (result.isErr()) {
         console.error("Release statistics error:", result.error);
         throw new Error(
-          `Release statistics request failed: ${result.error.message}`
+          `Release statistics request failed: ${result.error.message}`,
         );
       }
 
@@ -516,8 +516,8 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
       }
 
       console.log(
-        `✅ Release Statistics: Fetched marketplace stats for release ID ${releaseId} with USD currency`
+        `✅ Release Statistics: Fetched marketplace stats for release ID ${releaseId} with USD currency`,
       );
-    }
+    },
   );
 });

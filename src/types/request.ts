@@ -3,7 +3,7 @@ import type { QueryParams } from "./common.ts";
 
 export type RequestParams<
   TMethod extends keyof EndpointResponseMap,
-  TEndpoint extends keyof EndpointResponseMap[TMethod]
+  TEndpoint extends keyof EndpointResponseMap[TMethod],
 > = {
   method: TMethod;
   endpoint: TEndpoint;

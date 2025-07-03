@@ -30,7 +30,8 @@ export type EndpointResponseMap = {
     "/releases/:release_id/rating/:username": GetReleaseRatingByUserResponse;
     "/database/search": GetSearchResponse;
     "/users/:username/collection/folders": GetUserCollectionFoldersResponse;
-    "/users/:username/collection/folders/:folder_id/releases": GetUserCollectionItemsResponse;
+    "/users/:username/collection/folders/:folder_id/releases":
+      GetUserCollectionItemsResponse;
     "/users/:username/wantlist": GetUserWantlistResponse;
     [endpoint: string]: unknown;
   };
