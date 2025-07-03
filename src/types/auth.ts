@@ -1,4 +1,4 @@
-import type { HttpMethod } from "./common.ts";
+import type { HttpMethod, QueryParams } from "./common.ts";
 
 export type OAuthCredentials = {
   consumerKey: string;
@@ -20,14 +20,14 @@ export type OAuthParameters = {
 export type SignatureBaseStringParams = {
   method: string;
   url: string;
-  parameters: Record<string, string>;
+  parameters: QueryParams;
 };
 
 export type OAuthSignatureParams = {
   credentials: OAuthCredentials;
   method: HttpMethod;
   url: string;
-  parameters?: Record<string, string>;
+  parameters?: QueryParams;
 };
 
 export type InternalOAuthErrorCode =

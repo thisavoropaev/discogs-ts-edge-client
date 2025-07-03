@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 import { DISCOGS_API_URL } from "./constants.ts";
-import { buildPath, buildQueryString } from "./utils/url.ts";
+import { buildPath } from "./utils/url.ts";
 import { createOAuthClient, type OAuthClient } from "./auth/oauth-client.ts";
 import type {
   DiscogsApiError,
@@ -29,25 +29,18 @@ export const createDiscogsClient = (
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
-      // Build the path with parameters
-      const path = buildPath(
-        params.endpoint as string,
-        params.pathParams || {},
-      );
-
-      const queryString = buildQueryString(params.queryParams || {});
-      const fullPath = queryString ? `${path}?${queryString}` : path;
+      // To-Do: ugly, need to find a way to simplify it
+      const path = buildPath(String(params.endpoint), params.pathParams || {});
 
       const headers = {
         "User-Agent": config.userAgent,
         ...params.headers,
       };
 
-      const responseResult = await oauthClient.request(
-        params.method,
-        fullPath,
-        { headers },
-      );
+      const responseResult = await oauthClient.request(params.method, path, {
+        headers,
+        parameters: params.queryParams,
+      });
 
       if (responseResult.isErr()) {
         return err({

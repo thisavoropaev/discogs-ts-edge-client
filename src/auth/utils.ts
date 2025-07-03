@@ -1,6 +1,7 @@
 import * as oauth from "oauth-1a";
 import { err, ok, type Result } from "neverthrow";
 import type { OAuthError, OAuthSignatureParams } from "../types/auth.ts";
+import { buildUrlWithParams } from "../utils/url.ts";
 
 export const generateOAuthSignature = async (
   params: OAuthSignatureParams,
@@ -30,11 +31,10 @@ export const generateOAuthSignature = async (
       }
       : undefined;
 
-    const signResult = await client.sign(params.method, params.url, {
+    const url = buildUrlWithParams(params.url, params.parameters);
+
+    const signResult = await client.sign(params.method, url.toString(), {
       token,
-      body: params.parameters
-        ? new URLSearchParams(params.parameters)
-        : undefined,
     });
 
     return ok(signResult.oauth_signature);
@@ -75,11 +75,16 @@ export const createAuthorizationHeader = async (
       }
       : undefined;
 
-    const signResult = await client.sign(params.method, params.url, {
+    // Include query parameters in URL for OAuth signature
+    const url = new URL(params.url);
+    if (params.parameters) {
+      Object.entries(params.parameters).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
+      });
+    }
+
+    const signResult = await client.sign(params.method, url.toString(), {
       token,
-      body: params.parameters
-        ? new URLSearchParams(params.parameters)
-        : undefined,
     });
 
     const authHeader = oauth.toAuthHeader(signResult);
