@@ -1,4 +1,4 @@
-# Discogs Deno Client for Modern Runtimes
+# Discogs API Deno Client for Modern Runtimes
 
 A modern TypeScript client for the Discogs API, optimized for edge runtime
 environments like Vercel Edge Functions and Cloudflare Workers, also suitable
