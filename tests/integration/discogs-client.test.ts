@@ -17,8 +17,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
     !credentials.token ||
     !credentials.tokenSecret
   ) {
-    console.log("⚠️  Skipping integration tests - missing credentials");
-    return;
+    throw new Error("⚠️  Missing credentials");
   }
 
   const client = createDiscogsClient({

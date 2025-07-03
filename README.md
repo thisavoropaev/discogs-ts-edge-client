@@ -14,6 +14,8 @@ for Node.js as well.
 - 🔒 **Type Safe**: Full TypeScript support with generated declarations
 - 🌐 **Web Standards**: Uses modern Web APIs (fetch, URL, etc.)
 - ⚡ **Fast**: Optimized bundle size for quick cold starts
+- 🔄 **Result-based Error Handling**: Uses the `Result` pattern for elegant
+  error handling
 
 ## Supported Platforms
 
@@ -28,39 +30,74 @@ for Node.js as well.
 ### For Deno
 
 ```typescript
-import { DiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
+import { createDiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
 ```
 
 ### For npm/Node.js (after publishing)
 
 ```bash
-deno add jsr:@thisavoropaev/discogs-deno-client"
+deno add @thisavoropaev/discogs-deno-client
 ```
 
 ```typescript
-import { DiscogsClient } from "discogs-deno-client";
+import { createDiscogsClient } from "discogs-deno-client";
 ```
 
 ## Quick Start
 
 ```typescript
-import { DiscogsClient } from "./src/mod.ts";
+import { createDiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
 
 // Initialize client
-const client = new DiscogsClient({
-  userAgent: "MyApp/1.0",
-  // Optional: for authenticated requests
-  consumerKey: "your-consumer-key",
-  consumerSecret: "your-consumer-secret",
+const client = createDiscogsClient({
+  credentials: {
+    consumerKey: "your-consumer-key",
+    consumerSecret: "your-consumer-secret",
+    token: "your-access-token", // optional
+    tokenSecret: "your-access-token-secret", // optional
+  },
+  userAgent: "MyApp/1.0 +https://github.com/your-username/your-app",
 });
 
-// Search for releases
-const searchResults = await client.search("Nirvana Nevermind");
-console.log(searchResults.data);
-
 // Get release details
-const release = await client.getRelease(249504);
-console.log(release.data);
+const result = await client.request({
+  method: "GET",
+  endpoint: "/releases/:release_id",
+  pathParams: { release_id: "249504" }, // Nirvana - Nevermind
+});
+
+// Handle success or error with Result pattern
+if (result.isErr()) {
+  console.error("Error:", result.error);
+} else {
+  const release = result.value;
+  console.log(`Release: ${release.title} by ${release.artists[0]?.name}`);
+}
+```
+
+## Using the Result Pattern
+
+The client uses the [neverthrow](https://github.com/supermacro/neverthrow)
+library for error handling:
+
+```typescript
+// Making a request with query parameters
+const result = await client.request({
+  method: "GET",
+  endpoint: "/releases/:release_id",
+  pathParams: { release_id: "249504" },
+  queryParams: { curr_abbr: "USD" },
+});
+
+if (result.isErr()) {
+  console.error("Error:", result.error.message);
+  console.error("Error type:", result.error.type);
+  return;
+}
+
+// Safely access the successful result
+const release = result.value;
+console.log(`${release.title} (${release.year})`);
 ```
 
 ## Edge Function Examples
@@ -69,7 +106,7 @@ console.log(release.data);
 
 ```typescript
 // api/discogs.ts
-import { DiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client"";
+import { createDiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
 import { NextRequest } from "next/server";
 
 export const config = {
@@ -77,10 +114,14 @@ export const config = {
 };
 
 export default async function handler(req: NextRequest) {
-  const client = new DiscogsClient({
-    userAgent: "MyApp/1.0",
-    consumerKey: process.env.DISCOGS_CONSUMER_KEY,
-    consumerSecret: process.env.DISCOGS_CONSUMER_SECRET,
+  const client = createDiscogsClient({
+    credentials: {
+      consumerKey: process.env.DISCOGS_CONSUMER_KEY || "",
+      consumerSecret: process.env.DISCOGS_CONSUMER_SECRET || "",
+      token: process.env.DISCOGS_ACCESS_TOKEN || "",
+      tokenSecret: process.env.DISCOGS_ACCESS_TOKEN_SECRET || "",
+    },
+    userAgent: "MyApp/1.0 +https://github.com/your-username/your-app",
   });
 
   const { searchParams } = new URL(req.url);
@@ -90,26 +131,37 @@ export default async function handler(req: NextRequest) {
     return new Response("Missing query parameter", { status: 400 });
   }
 
-  try {
-    const results = await client.search(query);
-    return Response.json(results.data);
-  } catch (error) {
-    return new Response("Search failed", { status: 500 });
+  const result = await client.request({
+    method: "GET",
+    endpoint: "/database/search",
+    queryParams: { q: query },
+  });
+
+  if (result.isErr()) {
+    return new Response(`Search failed: ${result.error.message}`, {
+      status: 500,
+    });
   }
+
+  return Response.json(result.value);
 }
 ```
 
 ### Cloudflare Worker
 
 ```typescript
-import { DiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client"";
+import { createDiscogsClient } from "jsr:@thisavoropaev/discogs-deno-client";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const client = new DiscogsClient({
-      userAgent: "MyApp/1.0",
-      consumerKey: env.DISCOGS_CONSUMER_KEY,
-      consumerSecret: env.DISCOGS_CONSUMER_SECRET,
+    const client = createDiscogsClient({
+      credentials: {
+        consumerKey: env.DISCOGS_CONSUMER_KEY,
+        consumerSecret: env.DISCOGS_CONSUMER_SECRET,
+        token: env.DISCOGS_ACCESS_TOKEN,
+        tokenSecret: env.DISCOGS_ACCESS_TOKEN_SECRET,
+      },
+      userAgent: "MyApp/1.0 +https://github.com/your-username/your-app",
     });
 
     const url = new URL(request.url);
@@ -119,12 +171,19 @@ export default {
       return new Response("Missing query parameter", { status: 400 });
     }
 
-    try {
-      const results = await client.search(query);
-      return Response.json(results.data);
-    } catch (error) {
-      return new Response("Search failed", { status: 500 });
+    const result = await client.request({
+      method: "GET",
+      endpoint: "/database/search",
+      queryParams: { q: query },
+    });
+
+    if (result.isErr()) {
+      return new Response(`Search failed: ${result.error.message}`, {
+        status: 500,
+      });
     }
+
+    return Response.json(result.value);
   },
 };
 ```
@@ -180,24 +239,37 @@ deno task test:integration
 
 ## API Reference
 
-### DiscogsClient
-
-#### Constructor
+### createDiscogsClient
 
 ```typescript
-new DiscogsClient(config: DiscogsClientConfig)
+const client = createDiscogsClient(config: DiscogsClientConfig);
 ```
 
 #### Configuration
 
 ```typescript
 type DiscogsClientConfig = {
+  credentials: {
+    consumerKey: string;
+    consumerSecret: string;
+    token?: string;
+    tokenSecret?: string;
+  };
   userAgent: string; // Required: Your app identifier
-  consumerKey?: string; // OAuth consumer key
-  consumerSecret?: string; // OAuth consumer secret
-  token?: string; // OAuth access token
-  tokenSecret?: string; // OAuth access token secret
+  baseUrl?: string; // Optional: Override the base API URL
 };
+```
+
+#### Request Method
+
+```typescript
+client.request({
+  method: "GET" | "POST" | "PUT" | "DELETE", // HTTP method
+  endpoint: string, // API endpoint path with placeholders
+  pathParams?: Record<string, string | number>, // Path parameters
+  queryParams?: Record<string, string | number>, // Query parameters
+  headers?: Record<string, string>, // Additional headers
+});
 ```
 
 ## Environment Variables
@@ -207,8 +279,8 @@ For authenticated requests, set these environment variables:
 ```bash
 DISCOGS_CONSUMER_KEY=your-consumer-key
 DISCOGS_CONSUMER_SECRET=your-consumer-secret
-DISCOGS_TOKEN=your-access-token
-DISCOGS_TOKEN_SECRET=your-access-token-secret
+DISCOGS_ACCESS_TOKEN=your-access-token
+DISCOGS_ACCESS_TOKEN_SECRET=your-access-token-secret
 ```
 
 ## License
@@ -226,9 +298,10 @@ MIT License - see LICENSE file for details.
 
 ## Changelog
 
-### v1.0.0
+### v0.2.0
 
-- Initial release
+- Current development version
 - Edge runtime optimization
 - Full TypeScript support
 - Deno native development
+- Result pattern for error handling
