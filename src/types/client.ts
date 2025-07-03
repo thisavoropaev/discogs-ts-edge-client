@@ -1,5 +1,5 @@
 import type { Result } from "neverthrow";
-import type { OAuthCredentials } from "../auth/types.ts";
+import type { OAuthCredentials } from "./auth.ts";
 import type {
   DiscogsApiError,
   EndpointResponseMap,

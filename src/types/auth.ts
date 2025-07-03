@@ -1,11 +1,4 @@
-export type HttpMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "PATCH"
-  | "DELETE"
-  | "HEAD"
-  | "OPTIONS";
+import type { HttpMethod } from "./endpoint-response-map.ts";
 
 export type OAuthCredentials = {
   consumerKey: string;
