@@ -4,7 +4,7 @@ import type {
   EndpointResponseMap,
   RequestRawParams,
 } from "../types/mod.ts";
-import type { OAuthCredentials } from "../types/auth.ts";
+import type { OAuthCredentials } from "../auth/types.ts";
 
 export type DiscogsClientConfig = {
   credentials: OAuthCredentials;
