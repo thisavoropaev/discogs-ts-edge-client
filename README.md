@@ -1,4 +1,4 @@
-# Discogs Deno Client for Edge Runtime
+# Discogs Deno Client for Modern Runtimes
 
 A modern TypeScript client for the Discogs API, optimized for edge runtime
 environments like Vercel Edge Functions and Cloudflare Workers, also suitable
@@ -237,6 +237,31 @@ deno task test:unit
 deno task test:integration
 ```
 
+## Integration Testing Setup
+
+### Local Development
+
+For integration tests, you need to provide Discogs API credentials:
+
+1. Create a Discogs account and register a new application at https://www.discogs.com/settings/developers
+2. Create a `.env` file in the project root with the following content:
+```bash
+DISCOGS_CONSUMER_KEY=your_consumer_key
+DISCOGS_CONSUMER_SECRET=your_consumer_secret
+DISCOGS_ACCESS_TOKEN=your_access_token
+DISCOGS_ACCESS_TOKEN_SECRET=your_access_token_secret
+```
+
+### CI/CD Setup
+
+For GitHub Actions, add the following secrets to your repository:
+- `DISCOGS_CONSUMER_KEY`
+- `DISCOGS_CONSUMER_SECRET`
+- `DISCOGS_ACCESS_TOKEN`
+- `DISCOGS_ACCESS_TOKEN_SECRET`
+
+Make sure to add these secrets to your "development" environment in the repository settings.
+
 ## API Reference
 
 ### createDiscogsClient
@@ -286,22 +311,3 @@ DISCOGS_ACCESS_TOKEN_SECRET=your-access-token-secret
 ## License
 
 MIT License - see LICENSE file for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Run `deno task test` and `deno task check`
-6. Submit a pull request
-
-## Changelog
-
-### v0.2.0
-
-- Current development version
-- Edge runtime optimization
-- Full TypeScript support
-- Deno native development
-- Result pattern for error handling
