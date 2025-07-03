@@ -4,6 +4,7 @@ export * from "./common.ts";
 export * from "./label.ts";
 export * from "./label_releases.ts";
 export * from "./master_release.ts";
+export * from "./master_release_versions.ts";
 export * from "./release.ts";
 export * from "./search.ts";
 export * from "./user_collection_folders.ts";

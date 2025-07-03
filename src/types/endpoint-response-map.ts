@@ -4,6 +4,7 @@ import type {
   GetLabelReleasesResponse,
   GetLabelResponse,
   GetMasterReleaseResponse,
+  GetMasterReleaseVersionsResponse,
   GetReleaseRatingByUserResponse,
   GetReleaseResponse,
   GetSearchResponse,
@@ -25,16 +26,20 @@ export type EndpointResponseMap = {
     "/labels/:label_id": GetLabelResponse;
     "/labels/:label_id/releases": GetLabelReleasesResponse;
     "/masters/:master_id": GetMasterReleaseResponse;
+    "/masters/:master_id/versions": GetMasterReleaseVersionsResponse;
     "/releases/:release_id/rating/:username": GetReleaseRatingByUserResponse;
     "/database/search": GetSearchResponse;
     "/users/:username/collection/folders": GetUserCollectionFoldersResponse;
     "/users/:username/collection/folders/:folder_id/releases": GetUserCollectionItemsResponse;
     "/users/:username/wantlist": GetUserWantlistResponse;
+    [endpoint: string]: unknown;
   };
   PUT: {
+    [endpoint: string]: unknown;
     "/releases/:release_id/rating/:username": UpdateReleaseRatingByUserResponse;
   };
   DELETE: {
+    [endpoint: string]: unknown;
     "/releases/:release_id/rating/:username": UpdateReleaseRatingByUserResponse;
   };
 };
