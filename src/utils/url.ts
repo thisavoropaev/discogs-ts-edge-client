@@ -2,13 +2,11 @@ import type { QueryParams } from "../types/common.ts";
 
 export const buildPath = (
   endpoint: string,
-  pathParams: Record<string, string | number>,
+  pathParams: Record<string, string>
 ): string => {
   let path = endpoint;
 
-  // Replace path parameters in both formats: {param} and :param
   for (const [key, value] of Object.entries(pathParams)) {
-    path = path.replace(`{${key}}`, String(value));
     path = path.replace(`:${key}`, String(value));
   }
 
@@ -17,7 +15,7 @@ export const buildPath = (
 
 export const buildUrlWithParams = (
   initialUrl: string,
-  queryParams?: QueryParams,
+  queryParams?: QueryParams
 ) => {
   const url = new URL(initialUrl);
 
