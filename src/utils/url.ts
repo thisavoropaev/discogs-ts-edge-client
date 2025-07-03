@@ -23,5 +23,5 @@ export const buildQueryString = (
     params.append(key, String(value));
   });
 
-  return `?${params.toString()}`;
+  return params.toString();
 };

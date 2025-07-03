@@ -1,4 +1,5 @@
 import { err, ok, type Result } from "neverthrow";
+import { buildQueryString } from "../utils/url.ts";
 import { createAuthorizationHeader, generateOAuthSignature } from "./utils.ts";
 
 import type { HttpMethod } from "../types/mod.ts";
@@ -90,6 +91,13 @@ export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
 
     const authHeader = authHeaderResult.value;
 
+    // Debug logging
+    console.log(`[DEBUG] OAuth Request:`);
+    console.log(`  Method: ${method}`);
+    console.log(`  URL: ${fullUrl}`);
+    console.log(`  Parameters:`, parameters);
+    console.log(`  Auth Header: ${authHeader}`);
+
     const requestHeaders = new Headers({
       ...headers,
       Authorization: authHeader,
@@ -101,8 +109,14 @@ export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
       body,
     };
 
+    const queryString = parameters ? buildQueryString(parameters) : "";
+    const urlForFetch = queryString ? `${fullUrl}?${queryString}` : fullUrl;
+    
+    console.log(`  Final URL: ${urlForFetch}`);
+    console.log(`  Headers:`, Object.fromEntries(requestHeaders.entries()));
+
     try {
-      const response = await fetch(fullUrl, requestOptions);
+      const response = await fetch(urlForFetch, requestOptions);
       return ok(response);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

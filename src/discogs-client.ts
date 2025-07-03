@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 import { DISCOGS_API_URL } from "./constants.ts";
-import { buildPath, buildQueryString } from "./utils/url.ts";
+import { buildPath } from "./utils/url.ts";
 import { createOAuthClient, type OAuthClient } from "./auth/oauth-client.ts";
 import type {
   DiscogsApiError,
@@ -35,18 +35,25 @@ export const createDiscogsClient = (
         params.pathParams || {},
       );
 
-      const queryString = buildQueryString(params.queryParams || {});
-      const fullPath = queryString ? `${path}?${queryString}` : path;
-
       const headers = {
         "User-Agent": config.userAgent,
         ...params.headers,
       };
 
+      // Ensure all query parameter values are strings for OAuth signature
+      const stringifiedQueryParams = params.queryParams
+        ? Object.fromEntries(
+          Object.entries(params.queryParams).map(([key, value]) => [
+            key,
+            String(value),
+          ]),
+        )
+        : undefined;
+
       const responseResult = await oauthClient.request(
         params.method,
-        fullPath,
-        { headers },
+        path,
+        { headers, parameters: stringifiedQueryParams },
       );
 
       if (responseResult.isErr()) {

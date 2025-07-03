@@ -30,11 +30,13 @@ export const generateOAuthSignature = async (
       }
       : undefined;
 
-    const signResult = await client.sign(params.method, params.url, {
+    // Include query parameters in URL for OAuth signature
+    const urlWithParams = params.parameters 
+      ? `${params.url}?${new URLSearchParams(params.parameters).toString()}`
+      : params.url;
+
+    const signResult = await client.sign(params.method, urlWithParams, {
       token,
-      body: params.parameters
-        ? new URLSearchParams(params.parameters)
-        : undefined,
     });
 
     return ok(signResult.oauth_signature);
@@ -75,11 +77,13 @@ export const createAuthorizationHeader = async (
       }
       : undefined;
 
-    const signResult = await client.sign(params.method, params.url, {
+    // Include query parameters in URL for OAuth signature
+    const urlWithParams = params.parameters 
+      ? `${params.url}?${new URLSearchParams(params.parameters).toString()}`
+      : params.url;
+
+    const signResult = await client.sign(params.method, urlWithParams, {
       token,
-      body: params.parameters
-        ? new URLSearchParams(params.parameters)
-        : undefined,
     });
 
     const authHeader = oauth.toAuthHeader(signResult);
