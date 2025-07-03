@@ -13,10 +13,12 @@ export type DiscogsApiError = {
   details?: unknown;
 };
 
-export type ApiResult<T> = { success: true; data: T } | {
-  success: false;
-  error: DiscogsApiError;
-};
+export type ApiResult<T> =
+  | { success: true; data: T }
+  | {
+      success: false;
+      error: DiscogsApiError;
+    };
 
 export type PaginatedResponse<T> = {
   pagination: {
@@ -36,7 +38,4 @@ export type PaginatedResponse<T> = {
 
 export type DiscogsResponse<T> = T;
 
-/**
- * Type definition for URL query parameters
- */
 export type QueryParams = Record<string, string>;
