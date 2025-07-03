@@ -13,7 +13,7 @@ import type {
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
-  _options: DiscogsClientOptions = {},
+  _options: DiscogsClientOptions = {}
 ): DiscogsClient => {
   const oauthClient: OAuthClient = createOAuthClient({
     credentials: config.credentials,
@@ -23,16 +23,15 @@ export const createDiscogsClient = (
   return {
     request: async <
       TMethod extends keyof EndpointResponseMap,
-      TEndpoint extends keyof EndpointResponseMap[TMethod],
+      TEndpoint extends keyof EndpointResponseMap[TMethod]
     >(
-      params: RequestParams<TMethod, TEndpoint>,
+      params: RequestParams<TMethod, TEndpoint>
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
-      // Build the path with parameters
       const path = buildPath(
         params.endpoint as string,
-        params.pathParams || {},
+        params.pathParams || {}
       );
 
       const headers = {
@@ -40,11 +39,10 @@ export const createDiscogsClient = (
         ...params.headers,
       };
 
-      const responseResult = await oauthClient.request(
-        params.method,
-        path,
-        { headers, parameters: params.queryParams },
-      );
+      const responseResult = await oauthClient.request(params.method, path, {
+        headers,
+        parameters: params.queryParams,
+      });
 
       if (responseResult.isErr()) {
         return err({
@@ -54,14 +52,14 @@ export const createDiscogsClient = (
       }
 
       return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
-        responseResult.value,
+        responseResult.value
       );
     },
   };
 };
 
 async function handleApiResponse<T>(
-  response: Response,
+  response: Response
 ): Promise<Result<T, DiscogsApiError>> {
   try {
     const text = await response.text();

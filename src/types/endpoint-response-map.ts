@@ -35,11 +35,11 @@ export type EndpointResponseMap = {
     [endpoint: string]: unknown;
   };
   PUT: {
-    [endpoint: string]: unknown;
     "/releases/:release_id/rating/:username": UpdateReleaseRatingByUserResponse;
+    [endpoint: string]: unknown;
   };
   DELETE: {
-    [endpoint: string]: unknown;
     "/releases/:release_id/rating/:username": UpdateReleaseRatingByUserResponse;
+    [endpoint: string]: unknown;
   };
 };
