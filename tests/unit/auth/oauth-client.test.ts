@@ -1,7 +1,7 @@
 import { assertEquals, assertExists } from "@std/assert";
 import { createOAuthClient } from "@/auth/mod.ts";
 import type { OAuthCredentials } from "@/types/auth.ts";
-import { API_BASE_URL } from "@/config/constants.ts";
+import { API_BASE_URL } from "@/constants.ts";
 
 Deno.test("OAuth Client - createOAuthClient", () => {
   const credentials: OAuthCredentials = {

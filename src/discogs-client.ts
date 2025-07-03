@@ -1,5 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
-import { createOAuthClient, type OAuthClient } from "./auth/client.ts";
+import { API_BASE_URL } from "./constants.ts";
+import { buildPath, buildQueryString } from "./utils/url.ts";
+import { createOAuthClient, type OAuthClient } from "./auth/oauth-client.ts";
 import type {
   DiscogsApiError,
   DiscogsClient,
@@ -8,9 +10,6 @@ import type {
   EndpointResponseMap,
   RequestParams,
 } from "./types/mod.ts";
-
-import { API_BASE_URL } from "./config/constants.ts";
-import { buildPath, buildQueryString } from "./utils/url.ts";
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
@@ -36,24 +35,20 @@ export const createDiscogsClient = (
         params.pathParams || {},
       );
 
-      // Build query string if query parameters exist
       const queryString = buildQueryString(params.queryParams || {});
       const fullPath = queryString ? `${path}?${queryString}` : path;
 
-      // Prepare headers
       const headers = {
         "User-Agent": config.userAgent,
         ...params.headers,
       };
 
-      // Make the request
       const responseResult = await oauthClient.request(
         params.method,
         fullPath,
         { headers },
       );
 
-      // Handle OAuth errors
       if (responseResult.isErr()) {
         return err({
           message: responseResult.error.message,
@@ -61,7 +56,6 @@ export const createDiscogsClient = (
         });
       }
 
-      // Handle the response
       return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
         responseResult.value,
       );

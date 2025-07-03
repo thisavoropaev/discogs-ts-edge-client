@@ -1,4 +1,4 @@
-import type { HttpMethod } from "./endpoint-response-map.ts";
+import type { HttpMethod } from "./common.ts";
 
 export type OAuthCredentials = {
   consumerKey: string;
