@@ -1,20 +1,16 @@
-import type { Result } from "neverthrow";
-import { err } from "neverthrow";
-import type { OAuthClient } from "@/auth/client.ts";
+import { err, ok, type Result } from "neverthrow";
+import { createOAuthClient, type OAuthClient } from "./auth/client.ts";
 import type {
   DiscogsApiError,
-  EndpointResponseMap,
-  RequestRawParams,
-} from "@/types/mod.ts";
-import type {
   DiscogsClient,
   DiscogsClientConfig,
   DiscogsClientOptions,
-} from "./types.ts";
-import { createOAuthClient } from "../auth/client.ts";
-import { API_BASE_URL } from "../config/constants.ts";
-import { buildPath, buildQueryString } from "../utils/url.ts";
-import { handleApiResponse } from "../utils/api-response.ts";
+  EndpointResponseMap,
+  RequestParams,
+} from "./types/mod.ts";
+
+import { API_BASE_URL } from "./config/constants.ts";
+import { buildPath, buildQueryString } from "./utils/url.ts";
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
@@ -30,7 +26,7 @@ export const createDiscogsClient = (
       TMethod extends keyof EndpointResponseMap,
       TEndpoint extends keyof EndpointResponseMap[TMethod],
     >(
-      params: RequestRawParams<TMethod, TEndpoint>,
+      params: RequestParams<TMethod, TEndpoint>,
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
@@ -72,3 +68,27 @@ export const createDiscogsClient = (
     },
   };
 };
+
+async function handleApiResponse<T>(
+  response: Response,
+): Promise<Result<T, DiscogsApiError>> {
+  try {
+    const text = await response.text();
+
+    if (!response.ok) {
+      return err({
+        message: text || response.statusText,
+        statusCode: response.status,
+        type: response.status === 401 ? "AUTH_ERROR" : "API_ERROR",
+      });
+    }
+
+    const data = JSON.parse(text) as T;
+    return ok(data);
+  } catch (error) {
+    return err({
+      message: error instanceof Error ? error.message : "Unknown error",
+      type: "NETWORK_ERROR",
+    });
+  }
+}

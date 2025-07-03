@@ -1,6 +1,6 @@
 import { assertExists } from "@std/assert";
-import { createDiscogsClient } from "@/client/discogs-client.ts";
-import type { DiscogsClientConfig } from "@/client/types.ts";
+import { createDiscogsClient } from "@/discogs-client.ts";
+import type { DiscogsClientConfig } from "@/types/client.ts";
 
 Deno.test("DiscogsClient - initialization", () => {
   const config: DiscogsClientConfig = {

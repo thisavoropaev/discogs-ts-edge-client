@@ -1,10 +1,10 @@
 import type { Result } from "neverthrow";
+import type { OAuthCredentials } from "../auth/types.ts";
 import type {
   DiscogsApiError,
   EndpointResponseMap,
-  RequestRawParams,
-} from "../types/mod.ts";
-import type { OAuthCredentials } from "../auth/types.ts";
+  RequestParams,
+} from "./mod.ts";
 
 export type DiscogsClientConfig = {
   credentials: OAuthCredentials;
@@ -22,7 +22,7 @@ export type DiscogsClient = {
     TMethod extends keyof EndpointResponseMap,
     TEndpoint extends keyof EndpointResponseMap[TMethod],
   >(
-    params: RequestRawParams<TMethod, TEndpoint>,
+    params: RequestParams<TMethod, TEndpoint>,
   ) => Promise<
     Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
   >;

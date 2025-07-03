@@ -1,3 +1,4 @@
-export * from "./api/common.ts";
-export * from "./api/request-raw.ts";
-export * from "./api/endpoint-response-map.ts";
+export * from "./common.ts";
+export * from "./client.ts";
+export * from "./request.ts";
+export * from "./endpoint-response-map.ts";

@@ -1,5 +1,5 @@
-import { err, ok, type Result } from "neverthrow";
 import * as oauth from "oauth-1a";
+import { err, ok, type Result } from "neverthrow";
 import type { OAuthError, OAuthSignatureParams } from "./types.ts";
 export { createOAuthClient } from "./client.ts";
 
