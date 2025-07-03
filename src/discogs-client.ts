@@ -1,5 +1,5 @@
 import { err, ok, type Result } from "neverthrow";
-import { API_BASE_URL } from "./constants.ts";
+import { DISCOGS_API_URL } from "./constants.ts";
 import { buildPath, buildQueryString } from "./utils/url.ts";
 import { createOAuthClient, type OAuthClient } from "./auth/oauth-client.ts";
 import type {
@@ -17,7 +17,7 @@ export const createDiscogsClient = (
 ): DiscogsClient => {
   const oauthClient: OAuthClient = createOAuthClient({
     credentials: config.credentials,
-    baseUrl: config.baseUrl || API_BASE_URL,
+    baseUrl: config.baseUrl || DISCOGS_API_URL,
   });
 
   return {
