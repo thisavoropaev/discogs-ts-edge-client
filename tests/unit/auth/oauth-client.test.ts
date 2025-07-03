@@ -11,7 +11,7 @@ Deno.test("OAuth Client - createOAuthClient", () => {
     tokenSecret: "test-token-secret",
   };
 
-  const client = createOAuthClient({ credentials });
+  const client = createOAuthClient({ credentials, baseUrl: DISCOGS_API_URL });
 
   assertExists(client);
   assertExists(client.sign);
@@ -27,7 +27,7 @@ Deno.test("OAuth Client - sign method returns Result", async () => {
     tokenSecret: "test-token-secret",
   };
 
-  const client = createOAuthClient({ credentials });
+  const client = createOAuthClient({ credentials, baseUrl: DISCOGS_API_URL });
   const result = await client.sign("GET", "https://api.example.com/test");
 
   assertEquals(result.isOk(), true);
@@ -45,7 +45,7 @@ Deno.test("OAuth Client - createAuthHeader returns Result", async () => {
     tokenSecret: "test-token-secret",
   };
 
-  const client = createOAuthClient({ credentials });
+  const client = createOAuthClient({ credentials, baseUrl: DISCOGS_API_URL });
   const result = await client.createAuthHeader(
     "GET",
     "https://api.example.com/test",
@@ -59,27 +59,13 @@ Deno.test("OAuth Client - createAuthHeader returns Result", async () => {
   }
 });
 
-Deno.test("OAuth Client - baseUrl configuration", () => {
-  const credentials: OAuthCredentials = {
-    consumerKey: "test-key",
-    consumerSecret: "test-secret",
-  };
-
-  const client = createOAuthClient({
-    credentials,
-    baseUrl: DISCOGS_API_URL,
-  });
-
-  assertExists(client);
-});
-
 Deno.test("OAuth Client - error handling", async () => {
   const credentials: OAuthCredentials = {
     consumerKey: "", // Invalid credentials to trigger error
     consumerSecret: "",
   };
 
-  const client = createOAuthClient({ credentials });
+  const client = createOAuthClient({ credentials, baseUrl: DISCOGS_API_URL });
   const result = await client.sign("GET", "https://api.example.com/test");
 
   // Should handle errors gracefully and return a Result.Err

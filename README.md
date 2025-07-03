@@ -281,7 +281,6 @@ type DiscogsClientConfig = {
     tokenSecret?: string;
   };
   userAgent: string; // Required: Your app identifier
-  baseUrl?: string; // Optional: Override the base API URL
 };
 ```
 

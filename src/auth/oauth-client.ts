@@ -6,7 +6,7 @@ import type { OAuthCredentials, OAuthError } from "../types/auth.ts";
 
 export type OAuthClientConfig = {
   credentials: OAuthCredentials;
-  baseUrl?: string;
+  baseUrl: string;
 };
 
 export type RequestOptions = {
@@ -34,15 +34,14 @@ export type OAuthClient = {
 };
 
 export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
-  const { credentials, baseUrl = "" } = config;
+  const { credentials, baseUrl } = config;
 
   const buildFullUrl = (endpoint: string): string => {
     if (endpoint.startsWith("http")) {
       return endpoint;
     }
-    return baseUrl
-      ? `${baseUrl.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`
-      : endpoint;
+
+    return `${baseUrl.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`;
   };
 
   const sign = async (
