@@ -1,9 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: true
----
-# Testing Guidelines
-
-- All tests (unit and integration) should be run using `deno test`.
-- Every API endpoint implemented in this client **must** have a corresponding integration test.

@@ -1,6 +1,6 @@
 import "dotenv";
 import { assertEquals, assertExists } from "@std/assert";
-import { createDiscogsClient } from "@/client/discogs-client.ts";
+import { createDiscogsClient } from "@/discogs-client.ts";
 
 Deno.test("Discogs Client Integration Tests", async (t) => {
   const credentials = {
@@ -17,8 +17,7 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
     !credentials.token ||
     !credentials.tokenSecret
   ) {
-    console.log("⚠️  Skipping integration tests - missing credentials");
-    return;
+    throw new Error("⚠️  Missing credentials");
   }
 
   const client = createDiscogsClient({

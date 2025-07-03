@@ -1,6 +1,6 @@
 import type { EndpointResponseMap } from "./endpoint-response-map.ts";
 
-export type RequestRawParams<
+export type RequestParams<
   TMethod extends keyof EndpointResponseMap,
   TEndpoint extends keyof EndpointResponseMap[TMethod],
 > = {

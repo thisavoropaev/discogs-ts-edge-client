@@ -1,11 +1,4 @@
-export type HttpMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "PATCH"
-  | "DELETE"
-  | "HEAD"
-  | "OPTIONS";
+import type { HttpMethod } from "./common.ts";
 
 export type OAuthCredentials = {
   consumerKey: string;

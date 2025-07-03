@@ -1,3 +1,5 @@
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+
 export type DiscogsApiErrorType =
   | "NETWORK_ERROR"
   | "AUTH_ERROR"

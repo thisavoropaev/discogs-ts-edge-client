@@ -10,9 +10,15 @@ jobs:
   test:
     name: Run test
     runs-on: ubuntu-latest
+    environment: development
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
         with:
           deno-version: 2.x
       - run: deno task test
+        env:
+          DISCOGS_CONSUMER_KEY: ${{ secrets.DISCOGS_CONSUMER_KEY }}
+          DISCOGS_CONSUMER_SECRET: ${{ secrets.DISCOGS_CONSUMER_SECRET }}
+          DISCOGS_ACCESS_TOKEN: ${{ secrets.DISCOGS_ACCESS_TOKEN }}
+          DISCOGS_ACCESS_TOKEN_SECRET: ${{ secrets.DISCOGS_ACCESS_TOKEN_SECRET }}
