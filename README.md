@@ -16,6 +16,8 @@ for Node.js as well.
 - ⚡ **Fast**: Optimized bundle size for quick cold starts
 - 🔄 **Result-based Error Handling**: Uses the `Result` pattern for elegant
   error handling
+- ✅ **Integration Tests**: Comprehensive integration test suite to ensure API
+  fidelity
 
 ## Supported Platforms
 
@@ -243,8 +245,10 @@ deno task test:integration
 
 For integration tests, you need to provide Discogs API credentials:
 
-1. Create a Discogs account and register a new application at https://www.discogs.com/settings/developers
+1. Create a Discogs account and register a new application at
+   https://www.discogs.com/settings/developers
 2. Create a `.env` file in the project root with the following content:
+
 ```bash
 DISCOGS_CONSUMER_KEY=your_consumer_key
 DISCOGS_CONSUMER_SECRET=your_consumer_secret
@@ -255,12 +259,14 @@ DISCOGS_ACCESS_TOKEN_SECRET=your_access_token_secret
 ### CI/CD Setup
 
 For GitHub Actions, add the following secrets to your repository:
+
 - `DISCOGS_CONSUMER_KEY`
 - `DISCOGS_CONSUMER_SECRET`
 - `DISCOGS_ACCESS_TOKEN`
 - `DISCOGS_ACCESS_TOKEN_SECRET`
 
-Make sure to add these secrets to your "development" environment in the repository settings.
+Make sure to add these secrets to your "development" environment in the
+repository settings.
 
 ## API Reference
 
