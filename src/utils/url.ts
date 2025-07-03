@@ -14,7 +14,7 @@ export const buildPath = (
 };
 
 export const buildQueryString = (
-  queryParams?: Record<string, string | number>,
+  queryParams?: Record<string, string>,
 ): string => {
   if (!queryParams || Object.keys(queryParams).length === 0) return "";
 

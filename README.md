@@ -297,7 +297,7 @@ client.request({
   method: "GET" | "POST" | "PUT" | "DELETE", // HTTP method
   endpoint: string, // API endpoint path with placeholders
   pathParams?: Record<string, string | number>, // Path parameters
-  queryParams?: Record<string, string | number>, // Query parameters
+  queryParams?: Record<string, string>, // Query parameters
   headers?: Record<string, string>, // Additional headers
 });
 ```

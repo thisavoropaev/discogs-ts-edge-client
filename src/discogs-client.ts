@@ -40,20 +40,10 @@ export const createDiscogsClient = (
         ...params.headers,
       };
 
-      // Ensure all query parameter values are strings for OAuth signature
-      const stringifiedQueryParams = params.queryParams
-        ? Object.fromEntries(
-          Object.entries(params.queryParams).map(([key, value]) => [
-            key,
-            String(value),
-          ]),
-        )
-        : undefined;
-
       const responseResult = await oauthClient.request(
         params.method,
         path,
-        { headers, parameters: stringifiedQueryParams },
+        { headers, parameters: params.queryParams },
       );
 
       if (responseResult.isErr()) {

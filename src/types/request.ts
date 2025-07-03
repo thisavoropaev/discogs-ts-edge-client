@@ -7,6 +7,6 @@ export type RequestParams<
   method: TMethod;
   endpoint: TEndpoint;
   pathParams?: Record<string, string | number>;
-  queryParams?: Record<string, string | number>;
+  queryParams?: Record<string, string>;
   headers?: Record<string, string>;
 };
