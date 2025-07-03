@@ -16,8 +16,8 @@ for Node.js as well.
 - ⚡ **Fast**: Optimized bundle size for quick cold starts
 - 🔄 **Result-based Error Handling**: Uses the `Result` pattern for elegant
   error handling
-- ✅ **Integration Tests**: Comprehensive integration test suite to ensure API
-  fidelity
+- ✅ **Full Endpoint Coverage**: The client covers all Discogs API endpoints
+  for comprehensive access
 
 ## Supported Platforms
 
