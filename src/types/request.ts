@@ -1,4 +1,5 @@
 import type { EndpointResponseMap } from "./endpoint-response-map.ts";
+import type { QueryParams } from "./common.ts";
 
 export type RequestParams<
   TMethod extends keyof EndpointResponseMap,
@@ -7,6 +8,6 @@ export type RequestParams<
   method: TMethod;
   endpoint: TEndpoint;
   pathParams?: Record<string, string | number>;
-  queryParams?: Record<string, string>;
+  queryParams?: QueryParams;
   headers?: Record<string, string>;
 };

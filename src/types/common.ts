@@ -35,3 +35,8 @@ export type PaginatedResponse<T> = {
 };
 
 export type DiscogsResponse<T> = T;
+
+/**
+ * Type definition for URL query parameters
+ */
+export type QueryParams = Record<string, string>;

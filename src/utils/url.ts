@@ -1,3 +1,5 @@
+import type { QueryParams } from "../types/common.ts";
+
 export const buildPath = (
   endpoint: string,
   pathParams: Record<string, string | number>,
@@ -13,15 +15,17 @@ export const buildPath = (
   return path;
 };
 
-export const buildQueryString = (
-  queryParams?: Record<string, string>,
-): string => {
-  if (!queryParams || Object.keys(queryParams).length === 0) return "";
+export const buildUrlWithParams = (
+  initialUrl: string,
+  queryParams?: QueryParams,
+) => {
+  const url = new URL(initialUrl);
 
-  const params = new URLSearchParams();
-  Object.entries(queryParams).forEach(([key, value]) => {
-    params.append(key, String(value));
-  });
+  if (queryParams) {
+    Object.entries(queryParams).forEach(([key, value]) => {
+      url.searchParams.append(key, value);
+    });
+  }
 
-  return params.toString();
+  return url.toString();
 };
