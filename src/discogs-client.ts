@@ -17,7 +17,7 @@ export const createDiscogsClient = (
 ): DiscogsClient => {
   const oauthClient: OAuthClient = createOAuthClient({
     credentials: config.credentials,
-    baseUrl: config.baseUrl || DISCOGS_API_URL,
+    baseUrl: DISCOGS_API_URL,
   });
 
   return {
