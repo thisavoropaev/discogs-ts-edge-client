@@ -14,30 +14,33 @@ const DISCOGS_API_URL = "https://api.discogs.com";
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
-  _options: DiscogsClientOptions = {},
+  _options: DiscogsClientOptions = {}
 ): DiscogsClient => {
+  if (!config.credentials.consumerKey || !config.credentials.consumerSecret) {
+    throw new Error("Consumer key and secret are required");
+  }
+
+  if (!config.userAgent) {
+    throw new Error("User agent is required");
+  }
+
   return {
     request: async <
       TMethod extends keyof EndpointResponseMap,
-      TEndpoint extends keyof EndpointResponseMap[TMethod],
+      TEndpoint extends keyof EndpointResponseMap[TMethod]
     >(
-      params: RequestParams<TMethod, TEndpoint>,
+      params: RequestParams<TMethod, TEndpoint>
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
       const path = buildPath(params.endpoint as string, params.pathParams);
-      const fullUrl = `${DISCOGS_API_URL.replace(/\/$/, "")}/${
-        path.replace(
-          /^\//,
-          "",
-        )
-      }`;
+      const authUrl = `${DISCOGS_API_URL}/${path.replace(/^\//, "")}`;
 
       const authHeaderResult = await createAuthHeader(
         config.credentials,
         params.method,
-        fullUrl,
-        params.queryParams,
+        authUrl,
+        params.queryParams
       );
 
       if (authHeaderResult.isErr()) {
@@ -47,7 +50,7 @@ export const createDiscogsClient = (
         });
       }
 
-      const requestUrl = buildRequestUrl(fullUrl, params.queryParams);
+      const requestUrl = buildRequestUrl(authUrl, params.queryParams);
 
       const headers = {
         "User-Agent": config.userAgent,
@@ -62,12 +65,11 @@ export const createDiscogsClient = (
         });
 
         return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
-          response,
+          response
         );
       } catch (error) {
-        const message = error instanceof Error
-          ? error.message
-          : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         return err({
           message: `Network request failed: ${message}`,
           type: "NETWORK_ERROR",
@@ -78,7 +80,7 @@ export const createDiscogsClient = (
 };
 
 async function handleApiResponse<T>(
-  response: Response,
+  response: Response
 ): Promise<Result<T, DiscogsApiError>> {
   try {
     const text = await response.text();
@@ -87,7 +89,7 @@ async function handleApiResponse<T>(
       return err({
         message: text || response.statusText,
         statusCode: response.status,
-        type: response.status === 401 ? "AUTH_ERROR" : "API_ERROR",
+        type: getApiErrorType(response.status),
       });
     }
 
@@ -99,4 +101,10 @@ async function handleApiResponse<T>(
       type: "NETWORK_ERROR",
     });
   }
+}
+
+function getApiErrorType(status: number): DiscogsApiError["type"] {
+  if (status === 401) return "AUTH_ERROR";
+  if (status >= 400 && status < 500) return "VALIDATION_ERROR";
+  return "API_ERROR";
 }

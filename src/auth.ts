@@ -11,7 +11,7 @@ import type {
 import { buildRequestUrl } from "./url.ts";
 
 export const generateOAuthSignature = async (
-  params: OAuthSignatureParams,
+  params: OAuthSignatureParams
 ): Promise<Result<string, OAuthError>> => {
   const { consumerKey, consumerSecret } = params.credentials;
   if (!consumerKey || !consumerSecret) {
@@ -31,12 +31,13 @@ export const generateOAuthSignature = async (
       signature: oauth.HMAC_SHA1,
     });
 
-    const token = params.credentials.token && params.credentials.tokenSecret
-      ? {
-        key: params.credentials.token,
-        secret: params.credentials.tokenSecret,
-      }
-      : undefined;
+    const token =
+      params.credentials.token && params.credentials.tokenSecret
+        ? {
+            key: params.credentials.token,
+            secret: params.credentials.tokenSecret,
+          }
+        : undefined;
 
     const requestUrl = buildRequestUrl(params.url, params.parameters);
 
@@ -55,7 +56,7 @@ export const generateOAuthSignature = async (
 };
 
 export const createAuthorizationHeader = async (
-  params: OAuthSignatureParams,
+  params: OAuthSignatureParams
 ): Promise<Result<string, OAuthError>> => {
   const { consumerKey, consumerSecret } = params.credentials;
   if (!consumerKey || !consumerSecret) {
@@ -75,15 +76,17 @@ export const createAuthorizationHeader = async (
       signature: oauth.HMAC_SHA1,
     });
 
-    const token = params.credentials.token && params.credentials.tokenSecret
-      ? {
-        key: params.credentials.token,
-        secret: params.credentials.tokenSecret,
-      }
-      : undefined;
+    const token =
+      params.credentials.token && params.credentials.tokenSecret
+        ? {
+            key: params.credentials.token,
+            secret: params.credentials.tokenSecret,
+          }
+        : undefined;
 
     // Include query parameters in URL for OAuth signature
     const url = new URL(params.url);
+
     if (params.parameters) {
       Object.entries(params.parameters).forEach(([key, value]) => {
         url.searchParams.append(key, value);
@@ -109,7 +112,7 @@ export const createAuthHeader = async (
   credentials: OAuthCredentials,
   method: HttpMethod,
   url: string,
-  parameters?: QueryParams,
+  parameters?: QueryParams
 ): Promise<Result<string, OAuthError>> => {
   return await createAuthorizationHeader({
     credentials,
