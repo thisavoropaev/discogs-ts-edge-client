@@ -10,7 +10,6 @@ Deno.test("Discogs Client Integration Tests", async (t) => {
     tokenSecret: Deno.env.get("DISCOGS_ACCESS_TOKEN_SECRET") || "",
   };
 
-  // Skip tests if credentials are not provided
   if (
     !credentials.consumerKey ||
     !credentials.consumerSecret ||

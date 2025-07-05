@@ -1,7 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
-import { DISCOGS_API_URL } from "./constants.ts";
-import { buildPath } from "./utils/url.ts";
-import { createOAuthClient, type OAuthClient } from "./auth/oauth-client.ts";
+import { buildPath, buildRequestUrl } from "./url.ts";
+import { createAuthorizationHeader } from "./auth.ts";
 import type {
   DiscogsApiError,
   DiscogsClient,
@@ -11,14 +10,19 @@ import type {
   RequestParams,
 } from "./types/mod.ts";
 
+const DISCOGS_API_URL = "https://api.discogs.com";
+
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
   _options: DiscogsClientOptions = {},
 ): DiscogsClient => {
-  const oauthClient: OAuthClient = createOAuthClient({
-    credentials: config.credentials,
-    baseUrl: DISCOGS_API_URL,
-  });
+  if (!config.credentials.consumerKey || !config.credentials.consumerSecret) {
+    throw new Error("Consumer key and secret are required");
+  }
+
+  if (!config.userAgent) {
+    throw new Error("User agent is required");
+  }
 
   return {
     request: async <
@@ -29,29 +33,48 @@ export const createDiscogsClient = (
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
-      // To-Do: ugly, need to find a way to simplify it
-      const path = buildPath(String(params.endpoint), params.pathParams || {});
+      const path = buildPath(params.endpoint as string, params.pathParams);
+      const baseUrl = `${DISCOGS_API_URL}/${path.replace(/^\//, "")}`;
+      const requestUrl = buildRequestUrl(baseUrl, params.queryParams);
 
-      const headers = {
-        "User-Agent": config.userAgent,
-        ...params.headers,
-      };
-
-      const responseResult = await oauthClient.request(params.method, path, {
-        headers,
+      const authHeaderResult = await createAuthorizationHeader({
+        credentials: config.credentials,
+        method: params.method,
+        url: baseUrl,
         parameters: params.queryParams,
       });
 
-      if (responseResult.isErr()) {
+      if (authHeaderResult.isErr()) {
         return err({
-          message: responseResult.error.message,
+          message: authHeaderResult.error.message,
           type: "AUTH_ERROR",
         });
       }
 
-      return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
-        responseResult.value,
-      );
+      const headers = {
+        "User-Agent": config.userAgent,
+        Authorization: authHeaderResult.value,
+        ...params.headers,
+      };
+
+      try {
+        const response = await fetch(requestUrl, {
+          method: params.method,
+          headers,
+        });
+
+        return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
+          response,
+        );
+      } catch (error) {
+        const message = error instanceof Error
+          ? error.message
+          : "Unknown error";
+        return err({
+          message: `Network request failed: ${message}`,
+          type: "NETWORK_ERROR",
+        });
+      }
     },
   };
 };
@@ -66,7 +89,7 @@ async function handleApiResponse<T>(
       return err({
         message: text || response.statusText,
         statusCode: response.status,
-        type: response.status === 401 ? "AUTH_ERROR" : "API_ERROR",
+        type: getApiErrorType(response.status),
       });
     }
 
@@ -78,4 +101,10 @@ async function handleApiResponse<T>(
       type: "NETWORK_ERROR",
     });
   }
+}
+
+function getApiErrorType(status: number): DiscogsApiError["type"] {
+  if (status === 401) return "AUTH_ERROR";
+  if (status >= 400 && status < 500) return "VALIDATION_ERROR";
+  return "API_ERROR";
 }
