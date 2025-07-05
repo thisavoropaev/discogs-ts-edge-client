@@ -1,6 +1,5 @@
 import { err, ok, type Result } from "neverthrow";
-import { DISCOGS_API_URL } from "./constants.ts";
-import { buildPath, buildRequestUrl } from "./utils/url.ts";
+import { buildPath, buildRequestUrl } from "./url.ts";
 import { createAuthHeader } from "./auth.ts";
 import type {
   DiscogsApiError,
@@ -11,6 +10,7 @@ import type {
   RequestParams,
 } from "./types/mod.ts";
 
+const DISCOGS_API_URL = "https://api.discogs.com";
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
@@ -26,7 +26,12 @@ export const createDiscogsClient = (
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
       const path = buildPath(params.endpoint as string, params.pathParams);
-      const fullUrl = `${DISCOGS_API_URL.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+      const fullUrl = `${DISCOGS_API_URL.replace(/\/$/, "")}/${
+        path.replace(
+          /^\//,
+          "",
+        )
+      }`;
 
       const authHeaderResult = await createAuthHeader(
         config.credentials,
@@ -46,7 +51,7 @@ export const createDiscogsClient = (
 
       const headers = {
         "User-Agent": config.userAgent,
-        "Authorization": authHeaderResult.value,
+        Authorization: authHeaderResult.value,
         ...params.headers,
       };
 
@@ -60,7 +65,9 @@ export const createDiscogsClient = (
           response,
         );
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message = error instanceof Error
+          ? error.message
+          : "Unknown error";
         return err({
           message: `Network request failed: ${message}`,
           type: "NETWORK_ERROR",

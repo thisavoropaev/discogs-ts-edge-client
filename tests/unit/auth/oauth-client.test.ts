@@ -1,5 +1,5 @@
 import { assertEquals, assertExists } from "@std/assert";
-import { createAuthHeader, _internal } from "@/auth.ts";
+import { createAuthHeader, generateOAuthSignature } from "@/auth.ts";
 import type { OAuthCredentials } from "@/types/auth.ts";
 
 Deno.test("OAuth - createAuthHeader function exists", () => {
@@ -15,7 +15,7 @@ Deno.test("OAuth - internal sign function", async () => {
     tokenSecret: "test-token-secret",
   };
 
-  const result = await _internal.generateOAuthSignature({
+  const result = await generateOAuthSignature({
     credentials,
     method: "GET",
     url: "https://api.example.com/test",
@@ -56,7 +56,11 @@ Deno.test("OAuth - error handling", async () => {
     consumerSecret: "",
   };
 
-  const result = await createAuthHeader(credentials, "GET", "https://api.example.com/test");
+  const result = await createAuthHeader(
+    credentials,
+    "GET",
+    "https://api.example.com/test",
+  );
 
   // Should handle errors gracefully and return a Result.Err
   assertEquals(result.isErr(), true);

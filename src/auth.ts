@@ -1,9 +1,14 @@
 import * as oauth from "oauth-1a";
 import { err, ok, type Result } from "neverthrow";
-import type { HttpMethod } from "./types/mod.ts";
-import type { OAuthCredentials, OAuthError, OAuthSignatureParams } from "./types/auth.ts";
-import type { QueryParams } from "./types/common.ts";
-import { buildRequestUrl } from "./utils/url.ts";
+import type {
+  HttpMethod,
+  OAuthCredentials,
+  OAuthError,
+  OAuthSignatureParams,
+  QueryParams,
+} from "./types/mod.ts";
+
+import { buildRequestUrl } from "./url.ts";
 
 export const generateOAuthSignature = async (
   params: OAuthSignatureParams,
@@ -112,9 +117,4 @@ export const createAuthHeader = async (
     url,
     parameters,
   });
-};
-
-// Export internal functions for testing
-export const _internal = {
-  generateOAuthSignature,
 };

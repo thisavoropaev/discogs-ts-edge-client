@@ -1,4 +1,4 @@
-import type { QueryParams } from "../types/common.ts";
+import type { QueryParams } from "./types/common.ts";
 
 export const buildPath = (
   endpoint: string,
