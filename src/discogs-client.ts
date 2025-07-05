@@ -29,8 +29,7 @@ export const createDiscogsClient = (
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
-      // To-Do: ugly, need to find a way to simplify it
-      const path = buildPath(String(params.endpoint), params.pathParams || {});
+      const path = buildPath(params.endpoint as string, params.pathParams);
 
       const headers = {
         "User-Agent": config.userAgent,

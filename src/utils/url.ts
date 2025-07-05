@@ -2,12 +2,16 @@ import type { QueryParams } from "../types/common.ts";
 
 export const buildPath = (
   endpoint: string,
-  pathParams: Record<string, string>,
+  pathParams: Record<string, string> | undefined,
 ): string => {
+  if (!pathParams) {
+    return endpoint;
+  }
+
   let path = endpoint;
 
   for (const [key, value] of Object.entries(pathParams)) {
-    path = path.replace(`:${key}`, String(value));
+    path = path.replace(`:${key}`, value);
   }
 
   return path;
