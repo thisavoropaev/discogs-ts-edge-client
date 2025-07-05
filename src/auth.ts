@@ -85,15 +85,9 @@ export const createAuthorizationHeader = async (
         : undefined;
 
     // Include query parameters in URL for OAuth signature
-    const url = new URL(params.url);
+    const requestUrl = buildRequestUrl(params.url, params.parameters);
 
-    if (params.parameters) {
-      Object.entries(params.parameters).forEach(([key, value]) => {
-        url.searchParams.append(key, value);
-      });
-    }
-
-    const signResult = await client.sign(params.method, url.toString(), {
+    const signResult = await client.sign(params.method, requestUrl, {
       token,
     });
 
