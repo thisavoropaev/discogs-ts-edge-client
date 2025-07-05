@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 import { DISCOGS_API_URL } from "./constants.ts";
-import { buildPath } from "./utils/url.ts";
+import { buildPath, buildRequestUrl } from "./utils/url.ts";
 import { createOAuthClient, type OAuthClient } from "./auth/oauth-client.ts";
 import type {
   DiscogsApiError,
@@ -18,7 +18,6 @@ export const createDiscogsClient = (
 ): DiscogsClient => {
   const oauthClient: OAuthClient = createOAuthClient({
     credentials: config.credentials,
-    baseUrl: DISCOGS_API_URL,
   });
 
   return {
@@ -31,27 +30,45 @@ export const createDiscogsClient = (
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
       const path = buildPath(params.endpoint as string, params.pathParams);
+      const fullUrl = `${DISCOGS_API_URL.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 
-      const headers = {
-        "User-Agent": config.userAgent,
-        ...params.headers,
-      };
+      const authHeaderResult = await oauthClient.createAuthHeader(
+        params.method,
+        fullUrl,
+        params.queryParams,
+      );
 
-      const responseResult = await oauthClient.request(params.method, path, {
-        headers,
-        parameters: params.queryParams,
-      });
-
-      if (responseResult.isErr()) {
+      if (authHeaderResult.isErr()) {
         return err({
-          message: responseResult.error.message,
+          message: authHeaderResult.error.message,
           type: "AUTH_ERROR",
         });
       }
 
-      return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
-        responseResult.value,
-      );
+      const requestUrl = buildRequestUrl(fullUrl, params.queryParams);
+
+      const headers = {
+        "User-Agent": config.userAgent,
+        "Authorization": authHeaderResult.value,
+        ...params.headers,
+      };
+
+      try {
+        const response = await fetch(requestUrl, {
+          method: params.method,
+          headers,
+        });
+
+        return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
+          response,
+        );
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return err({
+          message: `Network request failed: ${message}`,
+          type: "NETWORK_ERROR",
+        });
+      }
     },
   };
 };
