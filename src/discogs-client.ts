@@ -34,12 +34,13 @@ export const createDiscogsClient = (
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
       const path = buildPath(params.endpoint as string, params.pathParams);
-      const authUrl = `${DISCOGS_API_URL}/${path.replace(/^\//, "")}`;
+      const baseUrl = `${DISCOGS_API_URL}/${path.replace(/^\//, "")}`;
+      const requestUrl = buildRequestUrl(baseUrl, params.queryParams);
 
       const authHeaderResult = await createAuthHeader(
         config.credentials,
         params.method,
-        authUrl,
+        baseUrl,
         params.queryParams
       );
 
@@ -49,8 +50,6 @@ export const createDiscogsClient = (
           type: "AUTH_ERROR",
         });
       }
-
-      const requestUrl = buildRequestUrl(authUrl, params.queryParams);
 
       const headers = {
         "User-Agent": config.userAgent,

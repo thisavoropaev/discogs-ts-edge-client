@@ -10,9 +10,9 @@ import type {
 
 import { buildRequestUrl } from "./url.ts";
 
-export const generateOAuthSignature = async (
+const signOAuthRequest = async (
   params: OAuthSignatureParams
-): Promise<Result<string, OAuthError>> => {
+): Promise<Result<any, OAuthError>> => {
   const { consumerKey, consumerSecret } = params.credentials;
   if (!consumerKey || !consumerSecret) {
     return err({
@@ -40,12 +40,9 @@ export const generateOAuthSignature = async (
         : undefined;
 
     const requestUrl = buildRequestUrl(params.url, params.parameters);
-
-    const signResult = await client.sign(params.method, requestUrl, {
-      token,
-    });
-
-    return ok(signResult.oauth_signature);
+    const signResult = await client.sign(params.method, requestUrl, { token });
+    
+    return ok(signResult);
   } catch (error) {
     return err({
       code: "SIGNATURE_GENERATION_FAILED",
@@ -55,51 +52,18 @@ export const generateOAuthSignature = async (
   }
 };
 
+export const generateOAuthSignature = async (
+  params: OAuthSignatureParams
+): Promise<Result<string, OAuthError>> => {
+  const signResult = await signOAuthRequest(params);
+  return signResult.map(result => result.oauth_signature);
+};
+
 export const createAuthorizationHeader = async (
   params: OAuthSignatureParams
 ): Promise<Result<string, OAuthError>> => {
-  const { consumerKey, consumerSecret } = params.credentials;
-  if (!consumerKey || !consumerSecret) {
-    return err({
-      code: "INVALID_CREDENTIALS",
-      message:
-        "Consumer Key and Consumer Secret are required for OAuth signature.",
-    });
-  }
-
-  try {
-    const client = new oauth.OAuthClient({
-      consumer: {
-        key: consumerKey,
-        secret: consumerSecret,
-      },
-      signature: oauth.HMAC_SHA1,
-    });
-
-    const token =
-      params.credentials.token && params.credentials.tokenSecret
-        ? {
-            key: params.credentials.token,
-            secret: params.credentials.tokenSecret,
-          }
-        : undefined;
-
-    // Include query parameters in URL for OAuth signature
-    const requestUrl = buildRequestUrl(params.url, params.parameters);
-
-    const signResult = await client.sign(params.method, requestUrl, {
-      token,
-    });
-
-    const authHeader = oauth.toAuthHeader(signResult);
-    return ok(authHeader);
-  } catch (error) {
-    return err({
-      code: "SIGNATURE_GENERATION_FAILED",
-      message: "Failed to create authorization header",
-      details: error,
-    });
-  }
+  const signResult = await signOAuthRequest(params);
+  return signResult.map(result => oauth.toAuthHeader(result));
 };
 
 export const createAuthHeader = async (
