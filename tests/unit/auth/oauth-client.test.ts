@@ -1,22 +1,13 @@
 import { assertEquals, assertExists } from "@std/assert";
-import { createOAuthClient, _internal } from "@/auth/mod.ts";
+import { createAuthHeader, _internal } from "@/auth.ts";
 import type { OAuthCredentials } from "@/types/auth.ts";
 
-Deno.test("OAuth Client - createOAuthClient", () => {
-  const credentials: OAuthCredentials = {
-    consumerKey: "test-key",
-    consumerSecret: "test-secret",
-    token: "test-token",
-    tokenSecret: "test-token-secret",
-  };
-
-  const client = createOAuthClient({ credentials });
-
-  assertExists(client);
-  assertExists(client.createAuthHeader);
+Deno.test("OAuth - createAuthHeader function exists", () => {
+  assertExists(createAuthHeader);
+  assertEquals(typeof createAuthHeader, "function");
 });
 
-Deno.test("OAuth Client - internal sign function", async () => {
+Deno.test("OAuth - internal sign function", async () => {
   const credentials: OAuthCredentials = {
     consumerKey: "test-key",
     consumerSecret: "test-secret",
@@ -37,7 +28,7 @@ Deno.test("OAuth Client - internal sign function", async () => {
   }
 });
 
-Deno.test("OAuth Client - createAuthHeader returns Result", async () => {
+Deno.test("OAuth - createAuthHeader returns Result", async () => {
   const credentials: OAuthCredentials = {
     consumerKey: "test-key",
     consumerSecret: "test-secret",
@@ -45,8 +36,8 @@ Deno.test("OAuth Client - createAuthHeader returns Result", async () => {
     tokenSecret: "test-token-secret",
   };
 
-  const client = createOAuthClient({ credentials });
-  const result = await client.createAuthHeader(
+  const result = await createAuthHeader(
+    credentials,
     "GET",
     "https://api.example.com/test",
   );
@@ -59,14 +50,13 @@ Deno.test("OAuth Client - createAuthHeader returns Result", async () => {
   }
 });
 
-Deno.test("OAuth Client - error handling", async () => {
+Deno.test("OAuth - error handling", async () => {
   const credentials: OAuthCredentials = {
     consumerKey: "", // Invalid credentials to trigger error
     consumerSecret: "",
   };
 
-  const client = createOAuthClient({ credentials });
-  const result = await client.createAuthHeader("GET", "https://api.example.com/test");
+  const result = await createAuthHeader(credentials, "GET", "https://api.example.com/test");
 
   // Should handle errors gracefully and return a Result.Err
   assertEquals(result.isErr(), true);

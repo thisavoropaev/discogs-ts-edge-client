@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 import { DISCOGS_API_URL } from "./constants.ts";
 import { buildPath, buildRequestUrl } from "./utils/url.ts";
-import { createOAuthClient, type OAuthClient } from "./auth/oauth-client.ts";
+import { createAuthHeader } from "./auth.ts";
 import type {
   DiscogsApiError,
   DiscogsClient,
@@ -16,10 +16,6 @@ export const createDiscogsClient = (
   config: DiscogsClientConfig,
   _options: DiscogsClientOptions = {},
 ): DiscogsClient => {
-  const oauthClient: OAuthClient = createOAuthClient({
-    credentials: config.credentials,
-  });
-
   return {
     request: async <
       TMethod extends keyof EndpointResponseMap,
@@ -32,7 +28,8 @@ export const createDiscogsClient = (
       const path = buildPath(params.endpoint as string, params.pathParams);
       const fullUrl = `${DISCOGS_API_URL.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 
-      const authHeaderResult = await oauthClient.createAuthHeader(
+      const authHeaderResult = await createAuthHeader(
+        config.credentials,
         params.method,
         fullUrl,
         params.queryParams,

@@ -1,7 +1,9 @@
 import * as oauth from "oauth-1a";
 import { err, ok, type Result } from "neverthrow";
-import type { OAuthError, OAuthSignatureParams } from "../types/auth.ts";
-import { buildRequestUrl } from "../utils/url.ts";
+import type { HttpMethod } from "./types/mod.ts";
+import type { OAuthCredentials, OAuthError, OAuthSignatureParams } from "./types/auth.ts";
+import type { QueryParams } from "./types/common.ts";
+import { buildRequestUrl } from "./utils/url.ts";
 
 export const generateOAuthSignature = async (
   params: OAuthSignatureParams,
@@ -96,4 +98,23 @@ export const createAuthorizationHeader = async (
       details: error,
     });
   }
+};
+
+export const createAuthHeader = async (
+  credentials: OAuthCredentials,
+  method: HttpMethod,
+  url: string,
+  parameters?: QueryParams,
+): Promise<Result<string, OAuthError>> => {
+  return await createAuthorizationHeader({
+    credentials,
+    method,
+    url,
+    parameters,
+  });
+};
+
+// Export internal functions for testing
+export const _internal = {
+  generateOAuthSignature,
 };
