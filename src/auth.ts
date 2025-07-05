@@ -1,18 +1,15 @@
 import * as oauth from "oauth-1a";
 import { err, ok, type Result } from "neverthrow";
 import type {
-  HttpMethod,
-  OAuthCredentials,
   OAuthError,
   OAuthSignatureParams,
   OAuthSignResult,
-  QueryParams,
 } from "./types/mod.ts";
 
 import { buildRequestUrl } from "./url.ts";
 
 const signOAuthRequest = async (
-  params: OAuthSignatureParams
+  params: OAuthSignatureParams,
 ): Promise<Result<OAuthSignResult, OAuthError>> => {
   const { consumerKey, consumerSecret } = params.credentials;
   if (!consumerKey || !consumerSecret) {
@@ -32,17 +29,16 @@ const signOAuthRequest = async (
       signature: oauth.HMAC_SHA1,
     });
 
-    const token =
-      params.credentials.token && params.credentials.tokenSecret
-        ? {
-            key: params.credentials.token,
-            secret: params.credentials.tokenSecret,
-          }
-        : undefined;
+    const token = params.credentials.token && params.credentials.tokenSecret
+      ? {
+        key: params.credentials.token,
+        secret: params.credentials.tokenSecret,
+      }
+      : undefined;
 
     const requestUrl = buildRequestUrl(params.url, params.parameters);
     const signResult = await client.sign(params.method, requestUrl, { token });
-    
+
     return ok(signResult);
   } catch (error) {
     return err({
@@ -54,29 +50,15 @@ const signOAuthRequest = async (
 };
 
 export const generateOAuthSignature = async (
-  params: OAuthSignatureParams
+  params: OAuthSignatureParams,
 ): Promise<Result<string, OAuthError>> => {
   const signResult = await signOAuthRequest(params);
-  return signResult.map(result => result.oauth_signature);
+  return signResult.map((result) => result.oauth_signature);
 };
 
 export const createAuthorizationHeader = async (
-  params: OAuthSignatureParams
+  params: OAuthSignatureParams,
 ): Promise<Result<string, OAuthError>> => {
   const signResult = await signOAuthRequest(params);
-  return signResult.map(result => oauth.toAuthHeader(result));
-};
-
-export const createAuthHeader = async (
-  credentials: OAuthCredentials,
-  method: HttpMethod,
-  url: string,
-  parameters?: QueryParams
-): Promise<Result<string, OAuthError>> => {
-  return await createAuthorizationHeader({
-    credentials,
-    method,
-    url,
-    parameters,
-  });
+  return signResult.map((result) => oauth.toAuthHeader(result));
 };

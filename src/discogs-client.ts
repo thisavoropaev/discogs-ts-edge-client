@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 import { buildPath, buildRequestUrl } from "./url.ts";
-import { createAuthHeader } from "./auth.ts";
+import { createAuthorizationHeader } from "./auth.ts";
 import type {
   DiscogsApiError,
   DiscogsClient,
@@ -14,7 +14,7 @@ const DISCOGS_API_URL = "https://api.discogs.com";
 
 export const createDiscogsClient = (
   config: DiscogsClientConfig,
-  _options: DiscogsClientOptions = {}
+  _options: DiscogsClientOptions = {},
 ): DiscogsClient => {
   if (!config.credentials.consumerKey || !config.credentials.consumerSecret) {
     throw new Error("Consumer key and secret are required");
@@ -27,9 +27,9 @@ export const createDiscogsClient = (
   return {
     request: async <
       TMethod extends keyof EndpointResponseMap,
-      TEndpoint extends keyof EndpointResponseMap[TMethod]
+      TEndpoint extends keyof EndpointResponseMap[TMethod],
     >(
-      params: RequestParams<TMethod, TEndpoint>
+      params: RequestParams<TMethod, TEndpoint>,
     ): Promise<
       Result<EndpointResponseMap[TMethod][TEndpoint], DiscogsApiError>
     > => {
@@ -37,12 +37,12 @@ export const createDiscogsClient = (
       const baseUrl = `${DISCOGS_API_URL}/${path.replace(/^\//, "")}`;
       const requestUrl = buildRequestUrl(baseUrl, params.queryParams);
 
-      const authHeaderResult = await createAuthHeader(
-        config.credentials,
-        params.method,
-        baseUrl,
-        params.queryParams
-      );
+      const authHeaderResult = await createAuthorizationHeader({
+        credentials: config.credentials,
+        method: params.method,
+        url: baseUrl,
+        parameters: params.queryParams,
+      });
 
       if (authHeaderResult.isErr()) {
         return err({
@@ -64,11 +64,12 @@ export const createDiscogsClient = (
         });
 
         return handleApiResponse<EndpointResponseMap[TMethod][TEndpoint]>(
-          response
+          response,
         );
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Unknown error";
+        const message = error instanceof Error
+          ? error.message
+          : "Unknown error";
         return err({
           message: `Network request failed: ${message}`,
           type: "NETWORK_ERROR",
@@ -79,7 +80,7 @@ export const createDiscogsClient = (
 };
 
 async function handleApiResponse<T>(
-  response: Response
+  response: Response,
 ): Promise<Result<T, DiscogsApiError>> {
   try {
     const text = await response.text();

@@ -13,8 +13,6 @@ export type DiscogsApiError = {
   details?: unknown;
 };
 
-
-
 export type PaginatedResponse<T> = {
   pagination: {
     page: number;

@@ -1,10 +1,10 @@
 import { assertEquals, assertExists } from "@std/assert";
-import { createAuthHeader, generateOAuthSignature } from "@/auth.ts";
+import { createAuthorizationHeader, generateOAuthSignature } from "@/auth.ts";
 import type { OAuthCredentials } from "@/types/auth.ts";
 
-Deno.test("OAuth - createAuthHeader function exists", () => {
-  assertExists(createAuthHeader);
-  assertEquals(typeof createAuthHeader, "function");
+Deno.test("OAuth - createAuthorizationHeader function exists", () => {
+  assertExists(createAuthorizationHeader);
+  assertEquals(typeof createAuthorizationHeader, "function");
 });
 
 Deno.test("OAuth - internal sign function", async () => {
@@ -28,7 +28,7 @@ Deno.test("OAuth - internal sign function", async () => {
   }
 });
 
-Deno.test("OAuth - createAuthHeader returns Result", async () => {
+Deno.test("OAuth - createAuthorizationHeader returns Result", async () => {
   const credentials: OAuthCredentials = {
     consumerKey: "test-key",
     consumerSecret: "test-secret",
@@ -36,11 +36,11 @@ Deno.test("OAuth - createAuthHeader returns Result", async () => {
     tokenSecret: "test-token-secret",
   };
 
-  const result = await createAuthHeader(
+  const result = await createAuthorizationHeader({
     credentials,
-    "GET",
-    "https://api.example.com/test",
-  );
+    method: "GET",
+    url: "https://api.example.com/test",
+  });
 
   assertEquals(result.isOk(), true);
   if (result.isOk()) {
@@ -56,11 +56,11 @@ Deno.test("OAuth - error handling", async () => {
     consumerSecret: "",
   };
 
-  const result = await createAuthHeader(
+  const result = await createAuthorizationHeader({
     credentials,
-    "GET",
-    "https://api.example.com/test",
-  );
+    method: "GET",
+    url: "https://api.example.com/test",
+  });
 
   // Should handle errors gracefully and return a Result.Err
   assertEquals(result.isErr(), true);
