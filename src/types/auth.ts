@@ -35,6 +35,16 @@ export type InternalOAuthErrorCode =
   | "NETWORK_ERROR"
   | "INVALID_CREDENTIALS";
 
+export type OAuthSignResult = {
+  oauth_signature: string;
+  oauth_consumer_key: string;
+  oauth_nonce?: string;
+  oauth_signature_method?: string;
+  oauth_timestamp?: number;
+  oauth_version?: "1.0";
+  oauth_token?: string;
+};
+
 export type OAuthError = {
   code: InternalOAuthErrorCode;
   message: string;

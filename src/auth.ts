@@ -5,6 +5,7 @@ import type {
   OAuthCredentials,
   OAuthError,
   OAuthSignatureParams,
+  OAuthSignResult,
   QueryParams,
 } from "./types/mod.ts";
 
@@ -12,7 +13,7 @@ import { buildRequestUrl } from "./url.ts";
 
 const signOAuthRequest = async (
   params: OAuthSignatureParams
-): Promise<Result<any, OAuthError>> => {
+): Promise<Result<OAuthSignResult, OAuthError>> => {
   const { consumerKey, consumerSecret } = params.credentials;
   if (!consumerKey || !consumerSecret) {
     return err({
