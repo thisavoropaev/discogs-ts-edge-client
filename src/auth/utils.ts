@@ -1,7 +1,7 @@
 import * as oauth from "oauth-1a";
 import { err, ok, type Result } from "neverthrow";
 import type { OAuthError, OAuthSignatureParams } from "../types/auth.ts";
-import { buildUrlWithParams } from "../utils/url.ts";
+import { buildRequestUrl } from "../utils/url.ts";
 
 export const generateOAuthSignature = async (
   params: OAuthSignatureParams,
@@ -31,9 +31,9 @@ export const generateOAuthSignature = async (
       }
       : undefined;
 
-    const url = buildUrlWithParams(params.url, params.parameters);
+    const requestUrl = buildRequestUrl(params.url, params.parameters);
 
-    const signResult = await client.sign(params.method, url.toString(), {
+    const signResult = await client.sign(params.method, requestUrl, {
       token,
     });
 

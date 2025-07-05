@@ -43,4 +43,7 @@ export type EndpointResponseMap = {
     "/releases/:release_id/rating/:username": UpdateReleaseRatingByUserResponse;
     [endpoint: string]: unknown;
   };
+  POST: {
+    [endpoint: string]: unknown;
+  };
 };

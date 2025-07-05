@@ -17,7 +17,11 @@ export const buildPath = (
   return path;
 };
 
-export const buildUrlWithParams = (
+export const buildAuthUrl = (endpoint: string, baseUrl: string): string => {
+  return `${baseUrl.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`;
+};
+
+export const buildRequestUrl = (
   initialUrl: string,
   queryParams?: QueryParams,
 ) => {

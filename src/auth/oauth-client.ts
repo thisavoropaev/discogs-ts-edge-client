@@ -5,7 +5,7 @@ import type { HttpMethod } from "../types/mod.ts";
 import type { OAuthCredentials, OAuthError } from "../types/auth.ts";
 import type { QueryParams } from "../types/common.ts";
 
-import { buildUrlWithParams } from "../utils/url.ts";
+import { buildAuthUrl, buildRequestUrl } from "../utils/url.ts";
 
 export type OAuthClientConfig = {
   credentials: OAuthCredentials;
@@ -39,10 +39,6 @@ export interface OAuthClient {
 export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
   const { credentials, baseUrl } = config;
 
-  const buildFullUrl = (endpoint: string): string => {
-    return `${baseUrl.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`;
-  };
-
   const sign = async (
     method: HttpMethod,
     url: string,
@@ -75,12 +71,12 @@ export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
     options: RequestOptions = {},
   ): Promise<Result<Response, OAuthError>> => {
     const { headers = {}, body, parameters } = options;
-    const fullUrl = buildFullUrl(endpoint);
-    const url = buildUrlWithParams(fullUrl, parameters);
+    const authUrl = buildAuthUrl(endpoint, baseUrl);
+    const requestUrl = buildRequestUrl(authUrl, parameters);
 
     const authHeaderResult = await createAuthHeader(
       method,
-      fullUrl,
+      authUrl,
       parameters,
     );
 
@@ -102,7 +98,7 @@ export const createOAuthClient = (config: OAuthClientConfig): OAuthClient => {
     };
 
     try {
-      const response = await fetch(url.toString(), requestOptions);
+      const response = await fetch(requestUrl, requestOptions);
       return ok(response);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
